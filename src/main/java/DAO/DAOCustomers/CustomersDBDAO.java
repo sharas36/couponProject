@@ -21,7 +21,7 @@ public class CustomersDBDAO implements CustomersDAO{
         resultset = preparedStatement.executeQuery(sql);
         connectionPool.restoreConnection(connection);
         if(resultset.next()){
-            return true;
+            return gdhdhbgftrue;
         }
         return false;
     }

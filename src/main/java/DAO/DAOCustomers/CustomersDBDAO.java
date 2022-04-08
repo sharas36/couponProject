@@ -42,7 +42,7 @@ public class CustomersDBDAO implements CustomersDAO{
 
     public void deleteCustomer(int customerId) {
         Connection connection = connectionPool.getConnection();
-        String sql
+        String sql = "delete * from customers where customerId = '" + customerId + "'";
 
         connectionPool.restoreConnection(connection);
     }

@@ -14,6 +14,7 @@ public class Company {
 	private int companyId;
 	private String companyName;
 	private String email;
+      private int email1;
 	private String password;
 	private List<Coupon> coupons = new ArrayList<Coupon>();
 

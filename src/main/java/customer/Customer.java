@@ -11,7 +11,7 @@ import lombok.*;
 public class Customer {
 	
 	private static int id = 1;
-	private int custometId;
+	private int customerId;
 	private String firstName;
 	private String lastName;
 	private String email;

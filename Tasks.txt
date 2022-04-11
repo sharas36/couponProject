@@ -10,4 +10,3 @@ to complete customer dbDao class + Main checks.
 
 
 shared tasks:
-1. ask rami regarding data access from remote. 

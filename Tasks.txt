@@ -1,0 +1,13 @@
+david tsaks:
+
+to complete coupon dbDao class + Main checks.
+data accsess from remote.
+
+alex tasks:
+
+to complete customer dbDao class + Main checks.
++check coupon dbDao (pluse comment and review for david tasks)
+
+
+shared tasks:
+1. ask rami regarding data access from remote. 

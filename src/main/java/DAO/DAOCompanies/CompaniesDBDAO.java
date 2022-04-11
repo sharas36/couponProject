@@ -28,7 +28,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return false;
 
     }
-
+//ghfghgfhfg
     public void addCompany(Company company) throws SQLException {
         Connection connection = connectionPool.getConnection();
 

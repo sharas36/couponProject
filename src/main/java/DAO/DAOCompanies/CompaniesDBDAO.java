@@ -53,7 +53,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public void deleteCompany(int companyId) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "delete companies where id = '" + companyId + "'";
+        String sql = "delete from companies where id = '" + companyId + "'";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.executeUpdate();
 

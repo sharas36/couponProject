@@ -18,10 +18,10 @@ public class Customer {
 	private String password;
 	private List<Coupon> coupons = new ArrayList<Coupon>();
 
-	
-
-
-	
-	
-
+	public Customer(String firstName, String lastName, String email, String password) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+	}
 }

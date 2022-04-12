@@ -5,7 +5,7 @@ data accsess from remote.
 
 alex tasks:
 
-to complete customer dbDao class + Main checks.
+to complete customer dbDao class + Main checks. Done!!!!!!!!!!!
 +check coupon dbDao (pluse comment and review for david tasks)
 
 

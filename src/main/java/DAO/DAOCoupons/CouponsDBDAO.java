@@ -10,14 +10,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CouponsDBDAO implements CouponsDAO {
+
     private ConnectionPool connectionPool = ConnectionPool.getInstanse();
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
-
-
+        String sql = "insert into coupons (companyId, categoryId, couponName, description, startDate ,endDate, amount, price, image) values ('" +
+                coupon.getCompany().getCompanyId()
+                + "', '" + coupon.getCategory(). + "', '" + company.getPassword() + "')   ";
 
         connectionPool.restoreConnection(connection);
     }

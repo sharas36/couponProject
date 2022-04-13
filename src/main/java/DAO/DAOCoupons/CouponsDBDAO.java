@@ -17,9 +17,23 @@ public class CouponsDBDAO implements CouponsDAO {
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "insert into coupons (companyId, categoryId, couponName, description, startDate ,endDate, amount, price, image) values ('" +
-                coupon.getCompany().getCompanyId()
-                + "', '" + coupon.getCategory(). + "', '" + company.getPassword() + "')   ";
+        String sql = "insert into coupons (companyId, categoryName, " + // here we change to categoryName -- have to change it in the sql as well
+                "couponName, description, startDate ,endDate, amount, price, image) values (?,?,?,?,?,?,?,?,?)";
+
+        preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1,coupon.getCompany().getCompanyId());
+        preparedStatement.setString(2,coupon.getCategory().toString());
+        preparedStatement.setString(3,coupon.getCouponName());
+        preparedStatement.setString(4,coupon.getDescription());
+        preparedStatement.setDate(5,coupon.getStartDate());
+        preparedStatement.setDate(6,coupon.getEndDate());
+        preparedStatement.setInt(7,coupon.getAmount());
+        preparedStatement.setDouble(8,coupon.getPrice());
+        preparedStatement.setString(9,coupon.getImageURL());
+
+        preparedStatement.execute();
+
+
 
         connectionPool.restoreConnection(connection);
     }

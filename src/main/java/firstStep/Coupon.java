@@ -20,12 +20,17 @@ public class Coupon {
 	private int howMuchRemain;
 	private double price;
 	private Category category;
-	private Date startDate;
-	private Date endDate;
+	private java.sql.Date startDate;
+	private java.sql.Date endDate;
 	private String imageURL;
+
+
+
 	
 
 	
 	
+
+
 
 }

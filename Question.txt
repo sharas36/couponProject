@@ -1,0 +1,2 @@
+1. ask rami regarding data access from remote. 
+2. to ask rami regarding giving to A bean function A parameter (the right syntax).

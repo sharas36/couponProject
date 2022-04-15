@@ -64,13 +64,12 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Connection connection = connectionPool.getConnection();
 
         ArrayList<Company> companies = new ArrayList<Company>();
-        String sql = "select * from companies";
+        String sql = "select * from coupons";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             String companyName = resultSet.getString("name");
             String email = resultSet.getString("email");
-            ;
             String password = resultSet.getString("password");
             int id = resultSet.getInt("companyId");
             Company company = new Company(id, companyName, email, password);

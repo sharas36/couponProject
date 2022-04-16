@@ -1,9 +1,8 @@
 package firstStep;
 
 import java.sql.Date;
-import java.util.Calendar;
 
-import company.Company;
+import Users.Company;
 import lombok.*;
 
 @Data

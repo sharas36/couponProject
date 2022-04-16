@@ -1,13 +1,12 @@
 package DAO.DAOCoupons;
 
 import DAO.DAOCompanies.CompaniesDBDAO;
-import company.Company;
+import Users.Company;
 import firstStep.ConnectionPool;
 import firstStep.Coupon;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CouponsDBDAO implements CouponsDAO {
 

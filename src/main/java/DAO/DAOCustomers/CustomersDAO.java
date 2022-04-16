@@ -1,7 +1,6 @@
 package DAO.DAOCustomers;
 
-import customer.Customer;
-import firstStep.Coupon;
+import Users.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

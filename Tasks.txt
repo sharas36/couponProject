@@ -10,3 +10,4 @@ to complete customer dbDao class + Main checks. Done!!!!!!!!!!!
 
 
 shared tasks:
+1. learn about stack!!

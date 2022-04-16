@@ -3,7 +3,7 @@ package DAO.DAOCompanies;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import company.Company;
+import Users.Company;
 
 public interface CompaniesDAO {
 

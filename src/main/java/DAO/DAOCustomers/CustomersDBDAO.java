@@ -1,6 +1,7 @@
 package DAO.DAOCustomers;
 
-import customer.Customer;
+import Users.Customer;
+import Users.User;
 import firstStep.ConnectionPool;
 import firstStep.Coupon;
 
@@ -9,13 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomersDBDAO implements CustomersDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstanse();
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
-
 
     public boolean isCustomerExist(String email, String password) throws SQLException {
         Connection connection = connectionPool.getConnection();
@@ -58,6 +57,7 @@ public class CustomersDBDAO implements CustomersDAO {
 
         connectionPool.restoreConnection(connection);
     }
+
     public void updateCustomerFirstName(Customer customer, String firstName) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
@@ -67,6 +67,7 @@ public class CustomersDBDAO implements CustomersDAO {
 
         connectionPool.restoreConnection(connection);
     }
+
     public void updateCustomerLastName(Customer customer, String lastName) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
@@ -77,7 +78,7 @@ public class CustomersDBDAO implements CustomersDAO {
         connectionPool.restoreConnection(connection);
     }
 
-    public void updateCustomerPassword(Customer customer, String password) throws SQLException{
+    public void updateCustomerPassword(Customer customer, String password) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
         String sql = "update customers set password = '" + password + "' where customer id = '" + customer.getCustomerId() + "'";
@@ -93,7 +94,7 @@ public class CustomersDBDAO implements CustomersDAO {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet rs = preparedStatement.executeQuery();
         int id = 0;
-        while (rs.next()){
+        while (rs.next()) {
             id = rs.getInt("customerId");
         }
         connectionPool.restoreConnection(connection);
@@ -106,15 +107,15 @@ public class CustomersDBDAO implements CustomersDAO {
         String sql = "select * from customers";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet rs = preparedStatement.executeQuery();
-        ArrayList <Customer> customers = new ArrayList<>();
-        while(rs.next()){
+        ArrayList<Customer> customers = new ArrayList<>();
+        while (rs.next()) {
             int customerId = rs.getInt("customerId");
             String firstName = rs.getString("firstName");
             String lastName = rs.getString("lastName");
             String email = rs.getString("email");
             String password = rs.getString("password");
-            Customer customer = new Customer(customerId, firstName, lastName, email, password, new ArrayList<Coupon>());
-            customers.add(customer);
+            User customer = new Customer(firstName, lastName, email, password);
+            customers.add((Customer) customer);
         }
 
         connectionPool.restoreConnection(connection);
@@ -128,12 +129,12 @@ public class CustomersDBDAO implements CustomersDAO {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet rs = preparedStatement.executeQuery();
         Customer customer = null;
-        while(rs.next()){
+        while (rs.next()) {
             String firstName = rs.getString("firstName");
             String lastName = rs.getString("lastName");
             String email = rs.getString("email");
             String password = rs.getString("password");
-            customer = new Customer(customerId, firstName, lastName, email, password, new ArrayList<Coupon>());
+            customer = new Customer(firstName, lastName, email, password);
         }
 
         connectionPool.restoreConnection(connection);

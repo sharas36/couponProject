@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import company.Company;
+import Users.Company;
 import firstStep.ConnectionPool;
 
 public class CompaniesDBDAO implements CompaniesDAO {

@@ -49,19 +49,19 @@ public class ConnectionPool {
 		System.out.println("We have " + connectionPool.size() + " connections");
 	}
 
-	public Connection getConnection() {
+	public synchronized Connection getConnection() {
 		Connection connection = connectionPool.get(connectionPool.size() - 1);
 		connectionPool.remove(connectionPool.size() - 1);
 		connectionsInUse.add(connection);
 		return connection;
 	}
 
-	public boolean restoreConnection(Connection connection) {
+	public synchronized boolean restoreConnection(Connection connection) {
 		connectionPool.add(connection);
 		return connectionsInUse.remove(connection);
 	}
 
-	public void closeAllConnections() throws SQLException {
+	public void closeAllConnections() throws SQLException { ////check all connections not in use
 		for (Connection connection : connectionPool) {
 			connection.close();
 		}

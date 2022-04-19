@@ -29,6 +29,19 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
     }
 
+    @Override
+    public boolean isThisMailExist(String email) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "SELECT * from companies where email = '" + email + "'";
+        this.preparedStatement = connection.prepareStatement(sql);
+        this.resultset = this.preparedStatement.executeQuery();
+        connectionPool.restoreConnection(connection);
+        if (this.resultset.next()) {
+            return true;
+        }
+        return false;
+    }
+
     public void addCompany(Company company) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
@@ -122,4 +135,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return id;
 
     }
+
+
 }

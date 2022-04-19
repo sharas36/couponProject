@@ -17,5 +17,6 @@ public interface CustomersDAO {
     public int getCustomerIdByMail(String email) throws SQLException;
     public ArrayList<Customer> getAllCustomers() throws SQLException;
     public Customer getCustomer(int customerId) throws SQLException;
+    public boolean isThisMailExist(String email) throws SQLException;
 
 }

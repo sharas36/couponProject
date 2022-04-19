@@ -3,11 +3,14 @@ package Facade;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
+import firstStep.Exceptions;
+
+import java.sql.SQLException;
 
 public abstract  class MainFacade {
 
     protected CompaniesDBDAO companiesDBDAO;
-    private CouponsDBDAO couponsDBDAO;
+    protected CouponsDBDAO couponsDBDAO;
     protected CustomersDBDAO customersDBDAO;
 
     public MainFacade(CompaniesDBDAO companiesDBDAO, CouponsDBDAO couponsDBDAO, CustomersDBDAO customersDBDAO) {
@@ -16,5 +19,5 @@ public abstract  class MainFacade {
         this.customersDBDAO = customersDBDAO;
     }
 
-    public abstract Boolean login(String email, String password);
+    public abstract Boolean login(String email, String password) throws SQLException, Exceptions;
 }

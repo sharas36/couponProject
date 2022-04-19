@@ -14,7 +14,7 @@ public class Coupon {
     private int couponId;
     private String couponName;
     private String description;
-    private Company company;
+    private int companyId;
     private int amount;
     private int howMuchRemain;
     private double price;
@@ -24,11 +24,11 @@ public class Coupon {
     private String imageURL;
 
 
-    public Coupon(String couponName, String description, Company company, int amount, double price,
+    public Coupon(String couponName, String description, int companyId, int amount, double price,
                  String category, Date endDate, String imageURL) {
         this.couponName = couponName;
         this.description = description;
-        this.company = company;
+        this.companyId = companyId;
         this.amount = amount;
         this.price = price;
         this.category = category;
@@ -38,12 +38,11 @@ public class Coupon {
 
     }
 
-    public Coupon(int couponId, String couponName, String description, Company company,
+    public Coupon(String couponName, String description, int companyId,
                   int amount, double price, String category, Date startDate, Date endDate, String imageURL) {
-        this.couponId = couponId;
         this.couponName = couponName;
         this.description = description;
-        this.company = company;
+        this.companyId = companyId;
         this.amount = amount;
         this.price = price;
         this.category = category;

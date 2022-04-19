@@ -33,6 +33,14 @@ public class Company extends User{
 		this.companyId = id;
 	}
 
+	public void addCoupon(Coupon coupon){
+		coupons.add(coupon);
+	}
+
+	public void deleteCoupon(Coupon coupon){
+		coupons.remove(coupon);
+	}
+
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
 	}

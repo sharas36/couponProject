@@ -21,7 +21,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 "couponName, description, startDate ,endDate, amount, price, image) values (?,?,?,?,?,?,?,?,?)";
 
         preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, coupon.getCompany().getCompanyId());
+        preparedStatement.setInt(1, coupon.getCompanyId());
         preparedStatement.setString(2, coupon.getCategory().toString());
         preparedStatement.setString(3, coupon.getCouponName());
         preparedStatement.setString(4, coupon.getDescription());
@@ -32,6 +32,7 @@ public class CouponsDBDAO implements CouponsDAO {
         preparedStatement.setString(9, coupon.getImageURL());
 
         preparedStatement.execute();
+        coupon.setCouponId(this.getCouponIdByCouponName(coupon.getCouponName()));
         connectionPool.restoreConnection(connection);
         coupon.setCouponId(getCouponIdByCouponName(coupon.getCouponName()));
 
@@ -86,19 +87,13 @@ public class CouponsDBDAO implements CouponsDAO {
             companiesDBDAO = new CompaniesDBDAO();
             Company company = companiesDBDAO.getOneCompany(companyId);
 
-            coupons.add(new Coupon(couponId, couponName, description, company,
+            coupons.add(new Coupon(couponName, description, companyId,
                     amount, price, categoryName, startDate, endDate, image));
         }
 
         connectionPool.restoreConnection(connection);
         return coupons;
 
-    }
-
-    @Override
-    public Coupon getOneCompany(int couponId) throws SQLException {  // here I did not understand why the return is Coupons
-        Company company = companiesDBDAO.getOneCompany(couponId);
-        return null;
     }
 
     public Coupon getOneCoupon(int couponId) throws SQLException {
@@ -110,21 +105,17 @@ public class CouponsDBDAO implements CouponsDAO {
         Coupon coupon = null;
 
         while (resultSet.next()) {
-            int idCoupon = resultSet.getInt("name");
-            int companyId = resultSet.getInt("name");
-            String categoryName = resultSet.getString("email");
-            String couponName = resultSet.getString("password");
+            int idCoupon = resultSet.getInt("couponId");
+            int companyId = resultSet.getInt("companyId");
+            String categoryName = resultSet.getString("categoryName");
+            String couponName = resultSet.getString("couponName");
             String description = resultSet.getString("description");
             Date startDate = resultSet.getDate("startDate");
             Date endDate = resultSet.getDate("endDate");
             int amount = resultSet.getInt("amount");
             double price = resultset.getDouble("price");
             String image = resultSet.getString("image");
-
-            CompaniesDBDAO couponsDBDAO = new CompaniesDBDAO();
-            Company company = couponsDBDAO.getOneCompany(companyId);
-
-            coupon = new Coupon(idCoupon, couponName, description, company,
+            coupon = new Coupon(couponName, description, companyId,
                     amount, price, categoryName, startDate, endDate, image);
 
         }
@@ -137,6 +128,20 @@ public class CouponsDBDAO implements CouponsDAO {
 
     public void deleteCouponPurchase(int couponId, int customerId) {
 
+    }
+
+    @Override
+    public boolean isThisCouponExist(String couponName) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "select * from coupons where couponName = '" + couponName + "'";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet rs = preparedStatement.executeQuery();
+        connectionPool.restoreConnection(connection);
+        if(rs.next()){
+            return true;
+        }
+        return false;
     }
 
     public int getCouponIdByCouponName(String couponName) throws SQLException {

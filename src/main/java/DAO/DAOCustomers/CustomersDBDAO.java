@@ -27,6 +27,18 @@ public class CustomersDBDAO implements CustomersDAO {
         return false;
     }
 
+    @Override
+    public boolean isThisMailExist(String email) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from customers where email ='" + email + "'";
+        resultset = preparedStatement.executeQuery(sql);
+        connectionPool.restoreConnection(connection);
+        if (resultset.next()) {
+            return true;
+        }
+        return false;
+    }
+
     public void addCustomer(Customer customer) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "insert into customers(firstName, lastName, email, password) values ('" +
@@ -140,4 +152,6 @@ public class CustomersDBDAO implements CustomersDAO {
         connectionPool.restoreConnection(connection);
         return customer;
     }
+
+
 }

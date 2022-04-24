@@ -117,8 +117,15 @@ public class CustomersDBDAO implements CustomersDAO {
         Connection connection = connectionPool.getConnection();
 
         String sql = "select * from customers";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = preparedStatement.executeQuery();
+        rs.last();
+        int numOfRows = rs.getRow();
+        if(numOfRows == 0){
+            return null;
+        }
+        rs.beforeFirst();
         ArrayList<Customer> customers = new ArrayList<>();
         while (rs.next()) {
             int customerId = rs.getInt("customerId");

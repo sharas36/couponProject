@@ -1,13 +1,13 @@
-david tsaks:
+david tasks:
 
 to complete coupon dbDao class + Main checks.
-data accsess from remote.
+couponsFacade
+to change connectionPool to stack from list.
+
 
 alex tasks:
 
-to complete customer dbDao class + Main checks. Done!!!!!!!!!!!
-+check coupon dbDao (pluse comment and review for david tasks)
-
+ask rami how to get from sql date with full format time(minute etc.)
+to chabge company and coupon exist to only by email.
 
 shared tasks:
-1. learn about stack!!

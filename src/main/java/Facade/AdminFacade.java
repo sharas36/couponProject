@@ -42,7 +42,7 @@ public class AdminFacade extends MainFacade{
     }
 
     public ArrayList<Company> getAllCompanies() throws SQLException, Exceptions {
-        if(this.companiesDBDAO.getAllCompanies().size() == 0){
+        if(this.companiesDBDAO.getAllCompanies() == null){
             throw new Exceptions("We dont have any companies");
         }
         return this.companiesDBDAO.getAllCompanies();
@@ -56,35 +56,35 @@ public class AdminFacade extends MainFacade{
     }
 
     public void addCustomer(Customer customer) throws SQLException, Exceptions {
-        if(this.customersDBDAO.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        if(this.customersDBDAO.isThisMailExist(customer.getEmail())){
             throw new Exceptions("This customer already exist");
         }
         this.customersDBDAO.addCustomer(customer);
     }
 
     public void updateCustomerPassword(Customer customer, String password) throws Exceptions, SQLException {
-        if(!this.customersDBDAO.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
             throw new Exceptions("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, password);
     }
 
     public void updateCustomerEmail(Customer customer, String email) throws Exceptions, SQLException {
-        if(!this.customersDBDAO.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
             throw new Exceptions("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, email);
     }
 
     public void updateCustomerFirstName(Customer customer, String firstName) throws Exceptions, SQLException {
-        if(!this.customersDBDAO.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
             throw new Exceptions("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, firstName);
     }
 
     public void updateCustomerLastName(Customer customer, String lastName) throws Exceptions, SQLException {
-        if(!this.customersDBDAO.isCustomerExist(customer.getEmail(), customer.getPassword())){
+        if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
             throw new Exceptions("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, lastName);
@@ -98,7 +98,7 @@ public class AdminFacade extends MainFacade{
     }
 
     public ArrayList<Customer> getAllCustomers() throws SQLException, Exceptions {
-        if(this.customersDBDAO.getAllCustomers().size() == 0){
+        if(this.customersDBDAO.getAllCustomers() == null){
             throw new Exceptions("We dont have any customers");
         }
         return this.customersDBDAO.getAllCustomers();

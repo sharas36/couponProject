@@ -7,8 +7,8 @@ import firstStep.Exceptions;
 
 import java.sql.SQLException;
 
-public class CouponFacade extends MainFacade{
-    public CouponFacade(CompaniesDBDAO companiesDBDAO, CouponsDBDAO couponsDBDAO, CustomersDBDAO customersDBDAO) {
+public class CustomerFacade extends MainFacade{
+    public CustomerFacade(CompaniesDBDAO companiesDBDAO, CouponsDBDAO couponsDBDAO, CustomersDBDAO customersDBDAO) {
         super(companiesDBDAO, couponsDBDAO, customersDBDAO);
     }
 

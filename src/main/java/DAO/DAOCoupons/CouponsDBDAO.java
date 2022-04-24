@@ -122,11 +122,17 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupon;
     }
 
-    public void addCouponPurchase(int couponId, int customerId) {
-
+    public boolean addCouponPurchase(int couponId, int customerId) {
+        updateCouponAmount(couponId, -1);
+        return true;
     }
 
     public void deleteCouponPurchase(int couponId, int customerId) {
+        updateCouponAmount(couponId, 1);
+
+    }
+
+    public void updateCouponAmount(int couponId, int addional){
 
     }
 

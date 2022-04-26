@@ -14,13 +14,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstanse();
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
+    private Object lock = new Object();
 
     public Boolean isCompanyExist(String email, String password) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
         String sql = "SELECT * from companies where email = '" + email + "' and password = '" + password + "'";
-        this.preparedStatement = connection.prepareStatement(sql);
-        this.resultset = this.preparedStatement.executeQuery();
+        synchronized (lock) {
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
+        }
         connectionPool.restoreConnection(connection);
         if (this.resultset.next()) {
             return true;
@@ -33,8 +36,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public boolean isThisMailExist(String email) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "SELECT * from companies where email = '" + email + "'";
-        this.preparedStatement = connection.prepareStatement(sql);
-        this.resultset = this.preparedStatement.executeQuery();
+        synchronized (lock) {
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
+        }
         connectionPool.restoreConnection(connection);
         if (this.resultset.next()) {
             return true;
@@ -47,9 +52,11 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
         String sql = "insert into companies (name, email, password) values ('" +
                 company.getCompanyName() + "', '" + company.getEmail() + "', '" + company.getPassword() + "')";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        preparedStatement.execute();
-        company.setCompanyId(this.getCompanyIdByEmail(company.getEmail()));
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.execute();
+            company.setCompanyId(this.getCompanyIdByEmail(company.getEmail()));
+        }
         connectionPool.restoreConnection(connection);
     }
 
@@ -57,9 +64,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Connection connection = connectionPool.getConnection();
 
         String sql = "update companies set email ='" + email + "', password ='" + password + "' where companyId ='" + company.getCompanyId() + "'";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.executeUpdate();
-
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        }
         connectionPool.restoreConnection(connection);
     }
 
@@ -67,9 +75,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Connection connection = connectionPool.getConnection();
 
         String sql = "delete from companies where id = '" + companyId + "'";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.executeUpdate();
-
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        }
         connectionPool.restoreConnection(connection);
     }
 
@@ -78,17 +87,18 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
         ArrayList<Company> companies = new ArrayList<Company>();
         String sql = "select * from coupons";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            String companyName = resultSet.getString("name");
-            String email = resultSet.getString("email");
-            String password = resultSet.getString("password");
-            int id = resultSet.getInt("companyId");
-            Company company = new Company(id, companyName, email, password);
-            companies.add(company);
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String companyName = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int id = resultSet.getInt("companyId");
+                Company company = new Company(id, companyName, email, password);
+                companies.add(company);
+            }
         }
-
         connectionPool.restoreConnection(connection);
         return companies;
     }
@@ -96,14 +106,15 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public Company getOneCompany(int companyId) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "select from companies where id = '" + companyId + "'";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        String companyName = resultSet.getString("name");
-        String email = resultSet.getString("email");
-        ;
-        String password = resultSet.getString("password");
-        Company company = new Company(companyName, email, password);
-
+        Company company = null;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            String companyName = resultSet.getString("name");
+            String email = resultSet.getString("email");
+            String password = resultSet.getString("password");
+            company = new Company(companyName, email, password);
+        }
 
         connectionPool.restoreConnection(connection);
         return company;
@@ -112,11 +123,13 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public int getCompanyId(String email) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "select * from companies where email = '" + email + "'";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ResultSet resultSet = preparedStatement.executeQuery();
         int id = 0;
-        while (resultSet.next()) {
-            id = resultSet.getInt("companyId");
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getInt("companyId");
+            }
         }
         connectionPool.restoreConnection(connection);
         return id;
@@ -125,11 +138,13 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public int getCompanyIdByEmail(String email) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "select * from companies where email = '" + email + "'";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ResultSet rs = preparedStatement.executeQuery();
         int id = 0;
-        while (rs.next()) {
-            id = rs.getInt("companyId");
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("companyId");
+            }
         }
         connectionPool.restoreConnection(connection);
         return id;

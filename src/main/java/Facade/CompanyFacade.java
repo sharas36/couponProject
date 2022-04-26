@@ -4,7 +4,7 @@ import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import firstStep.Coupon;
-import firstStep.systemException;
+import firstStep.SystemException;
 
 import java.sql.SQLException;
 
@@ -17,20 +17,20 @@ public class CompanyFacade extends MainFacade {
     }
 
     @Override
-    public Boolean login(String email, String password) throws SQLException, systemException {
+    public Boolean login(String email, String password) throws SQLException, SystemException {
         if (companiesDBDAO.isCompanyExist(email, password)) {
             this.setCompanyId(email);
             return true;
         }
         if (!customersDBDAO.isThisMailExist(email)) {
-            throw new systemException("This email isnt exist!. please try again");
+            throw new SystemException("This email isnt exist!. please try again");
         }
-        throw new systemException("The password isnt match the email! please try again");
+        throw new SystemException("The password isnt match the email! please try again");
     }
 
-    public void addCoupon(Coupon coupon) throws SQLException, systemException {
+    public void addCoupon(Coupon coupon) throws SQLException, SystemException {
         if(couponsDBDAO.isThisCouponExist(coupon.getCouponName())){
-            throw new systemException("This coupon is already exist");
+            throw new SystemException("This coupon is already exist");
         }
         couponsDBDAO.addCoupon(coupon);
         companiesDBDAO.getOneCompany(coupon.getCompanyId()).addCoupon(coupon);

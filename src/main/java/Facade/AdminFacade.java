@@ -5,7 +5,7 @@ import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Company;
 import Users.Customer;
-import firstStep.systemException;
+import firstStep.SystemException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,97 +16,103 @@ public class AdminFacade extends MainFacade{
     }
 
     @Override
-    public Boolean login(String email, String password) { //need to be done!!!!
-        return null;
+    public Boolean login(String email, String password) {
+        if(!email.equals("com.admin@admin")){
+            new SystemException("This email is wrong");
+        }
+        else if(!password.equals("admin")){
+            new SystemException("This password is wrong");
+        }
+        return true;
     }
 
-    public void addCompany(Company company) throws SQLException, systemException {
+    public void addCompany(Company company) throws SQLException, SystemException {
         if(this.companiesDBDAO.isCompanyExist(company.getEmail(), company.getPassword())){
-            throw new systemException("This company already exist");
+            throw new SystemException("This company already exist");
         }
         this.companiesDBDAO.addCompany(company);
     }
     // wait for hibernate (merge function).
-    public void updateCompany(Company company) throws systemException, SQLException {
+    public void updateCompany(Company company) throws SystemException, SQLException {
         if(!this.companiesDBDAO.isCompanyExist(company.getEmail(), company.getPassword())){
-            throw new systemException("This company isnt exist");
+            throw new SystemException("This company isnt exist");
         }
         this.companiesDBDAO.updateCompany(company, company.getEmail(), company.getPassword());
     }
 
-    public void deleteCompany(int companyId) throws SQLException, systemException {
+    public void deleteCompany(int companyId) throws SQLException, SystemException {
         if(companiesDBDAO.getOneCompany(companyId) == null){
-            throw new systemException("This company isnt exist");
+            throw new SystemException("This company isnt exist");
         }
         this.companiesDBDAO.deleteCompany(companyId);
     }
 
-    public ArrayList<Company> getAllCompanies() throws SQLException, systemException {
+    public ArrayList<Company> getAllCompanies() throws SQLException, SystemException {
         if(this.companiesDBDAO.getAllCompanies() == null){
-            throw new systemException("We dont have any companies");
+            throw new SystemException("We dont have any companies");
         }
         return this.companiesDBDAO.getAllCompanies();
     }
 
-    public Company getOneCompany(int companyId) throws SQLException, systemException {
+    public Company getOneCompany(int companyId) throws SQLException, SystemException {
         if(companiesDBDAO.getOneCompany(companyId) == null){
-            throw new systemException("This company isnt exist");
+            throw new SystemException("This company isnt exist");
         }
         return companiesDBDAO.getOneCompany(companyId);
     }
 
-    public void addCustomer(Customer customer) throws SQLException, systemException {
+    public void addCustomer(Customer customer) throws SQLException, SystemException {
         if(this.customersDBDAO.isThisMailExist(customer.getEmail())){
-            throw new systemException("This customer already exist");
+            throw new SystemException("This customer already exist");
         }
         this.customersDBDAO.addCustomer(customer);
     }
 
-    public void updateCustomerPassword(Customer customer, String password) throws systemException, SQLException {
+    public void updateCustomerPassword(Customer customer, String password) throws SystemException, SQLException {
         if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, password);
     }
 
-    public void updateCustomerEmail(Customer customer, String email) throws systemException, SQLException {
+    public void updateCustomerEmail(Customer customer, String email) throws SystemException, SQLException {
         if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, email);
     }
 
-    public void updateCustomerFirstName(Customer customer, String firstName) throws systemException, SQLException {
+    public void updateCustomerFirstName(Customer customer, String firstName) throws SystemException, SQLException {
         if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, firstName);
     }
 
-    public void updateCustomerLastName(Customer customer, String lastName) throws systemException, SQLException {
+    public void updateCustomerLastName(Customer customer, String lastName) throws SystemException, SQLException {
         if(!this.customersDBDAO.isThisMailExist(customer.getEmail())){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         this.customersDBDAO.updateCustomerPassword(customer, lastName);
     }
 
-    public void deleteCustomer(int customerId) throws SQLException, systemException {
+    public void deleteCustomer(int customerId) throws SQLException, SystemException {
         if(customersDBDAO.getCustomer(customerId) == null){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         this.companiesDBDAO.deleteCompany(customerId);
     }
 
-    public ArrayList<Customer> getAllCustomers() throws SQLException, systemException {
+    public ArrayList<Customer> getAllCustomers() throws SQLException, SystemException {
         if(this.customersDBDAO.getAllCustomers() == null){
-            throw new systemException("We dont have any customers");
+            throw new SystemException("We dont have any customers");
         }
         return this.customersDBDAO.getAllCustomers();
     }
 
-    public Customer getOneCustomer(int customerId) throws SQLException, systemException {
+    public Customer getOneCustomer(int customerId) throws SQLException, SystemException {
         if(customersDBDAO.getCustomer(customerId) == null){
-            throw new systemException("This customer isnt exist");
+            throw new SystemException("This customer isnt exist");
         }
         return customersDBDAO.getCustomer(customerId);
     }

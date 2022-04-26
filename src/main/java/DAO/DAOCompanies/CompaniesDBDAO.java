@@ -76,17 +76,10 @@ public class CompaniesDBDAO implements CompaniesDAO {
     public ArrayList<Company> getAllCompanies() throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "select * from companies";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_UPDATABLE);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        resultSet.last();
-        int numOfRows = resultSet.getRow();
-        if(numOfRows == 0){
-            return null;
-        }
-        resultSet.beforeFirst();
         ArrayList<Company> companies = new ArrayList<Company>();
+        String sql = "select * from coupons";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             String companyName = resultSet.getString("name");
             String email = resultSet.getString("email");

@@ -1,10 +1,10 @@
 package firstStep;
 
-public class Exceptions extends Exception{
+public class systemException extends Exception{
 
     private static final long serialVersionUID = 1L;
 
-    public Exceptions(String message) {
+    public systemException(String message) {
         super(message);
 
     }

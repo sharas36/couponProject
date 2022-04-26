@@ -3,7 +3,7 @@ package Facade;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
-import firstStep.Exceptions;
+import firstStep.systemException;
 
 import java.sql.SQLException;
 
@@ -19,5 +19,5 @@ public abstract  class MainFacade {
         this.customersDBDAO = customersDBDAO;
     }
 
-    public abstract Boolean login(String email, String password) throws SQLException, Exceptions;
+    public abstract Boolean login(String email, String password) throws SQLException, systemException;
 }

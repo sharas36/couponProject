@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class ConnectionPool {
 	private static ConnectionPool instanse = new ConnectionPool();
@@ -17,6 +18,7 @@ public class ConnectionPool {
 			+ USER_NAME + "&password=" + PASSWORD;
 	private List<Connection> connectionPool = new ArrayList<Connection>();
 	private List<Connection> connectionsInUse = new ArrayList<Connection>();
+	private Stack<Connection> stack = new Stack<>();
 
 	// CONNECTION_STRING:
 	// jdbc:mysql://localhost:3306/example/user=root&password=1234
@@ -51,6 +53,7 @@ public class ConnectionPool {
 
 	public synchronized Connection getConnection() {
 		Connection connection = connectionPool.get(connectionPool.size() - 1);
+
 		connectionPool.remove(connectionPool.size() - 1);
 		connectionsInUse.add(connection);
 		return connection;

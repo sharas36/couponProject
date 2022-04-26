@@ -13,33 +13,33 @@ public class Job extends Thread {
     private List<Coupon> coupons = new ArrayList<>();
     private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
-    Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            connectionPool.getConnection();
+
+    @Override
+    public void run() {
+        connectionPool.getConnection();
+        try {
+            coupons = couponsDBDAO.getAllCoupons();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        while (true) {
             try {
-                coupons = couponsDBDAO.getAllCoupons();
-            } catch (SQLException e) {
+                for (Coupon coupon : coupons) {
+                    if (expireCheck(coupon.getEndDate())) {
+                        couponsDBDAO.deleteCoupon(coupon.getCouponId());
+                    }
+                }
+                sleep(1000 * 60 * 60);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            while (true){
-                try{
-                    Date current = new Date(System.currentTimeMillis());
-                    for (Coupon coupon : coupons) {
-                        if (expireCheck(coupon.getEndDate())){
-                            couponsDBDAO.deleteCoupon(coupon.getCouponId());
-                        }
-                    }
-                    sleep(1000 * 60 * 60);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
-    });
 
-    public boolean expireCheck(Date exp){
+    }
+
+    public boolean expireCheck(Date exp) {
         Date current = new Date(System.currentTimeMillis());
         return exp.getTime() <= current.getTime();
     }

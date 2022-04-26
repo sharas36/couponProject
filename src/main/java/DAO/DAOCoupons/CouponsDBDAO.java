@@ -14,7 +14,7 @@ public class CouponsDBDAO implements CouponsDAO {
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
     private CompaniesDBDAO companiesDBDAO;
-    private Object lock = new Object();
+    private static Object lock = new Object();
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
@@ -174,5 +174,9 @@ public class CouponsDBDAO implements CouponsDAO {
         connectionPool.restoreConnection(connection);
         return id;
 
+    }
+
+    public static Object getLock(){
+        return lock;
     }
 }

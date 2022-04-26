@@ -25,9 +25,11 @@ public class Job extends Thread {
 
         while (true) {
             try {
-                for (Coupon coupon : coupons) {
-                    if (expireCheck(coupon.getEndDate())) {
-                        couponsDBDAO.deleteCoupon(coupon.getCouponId());
+                synchronized (couponsDBDAO.getLock()) {
+                    for (Coupon coupon : coupons) {
+                        if (expireCheck(coupon.getEndDate())) {
+                            couponsDBDAO.deleteCoupon(coupon.getCouponId());
+                        }
                     }
                 }
                 sleep(1000 * 60 * 60);

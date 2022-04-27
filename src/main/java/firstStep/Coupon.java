@@ -51,6 +51,10 @@ public class Coupon {
         this.imageURL = imageURL;
     }
 
+    public Coupon(){
+     init();
+    }
+
     private void init() {
         java.util.Date myDate = new java.util.Date();
         //this.startDate = new Date(myDate.getTime());

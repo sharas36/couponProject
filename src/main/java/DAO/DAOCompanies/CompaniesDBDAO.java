@@ -47,6 +47,21 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return false;
     }
 
+    @Override
+    public boolean isThisNameExist(String companyName) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "SELECT * from companies where companyName = '" + companyName + "'";
+        synchronized (lock) {
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
+        }
+        connectionPool.restoreConnection(connection);
+        if (this.resultset.next()) {
+            return true;
+        }
+        return false;
+    }
+
     public void addCompany(Company company) throws SQLException {
         Connection connection = connectionPool.getConnection();
 

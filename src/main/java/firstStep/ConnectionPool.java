@@ -28,7 +28,6 @@ public class ConnectionPool {
 		try {
 			init();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println("Failed to init DatabaseManager: " + e);

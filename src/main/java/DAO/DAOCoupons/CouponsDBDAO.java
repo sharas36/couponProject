@@ -24,7 +24,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, coupon.getCompanyId());
-            preparedStatement.setString(2, coupon.getCategory().toString());
+            preparedStatement.setString(2, coupon.getCategory());
             preparedStatement.setString(3, coupon.getCouponName());
             preparedStatement.setString(4, coupon.getDescription());
             preparedStatement.setDate(5, coupon.getStartDate());
@@ -60,7 +60,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "delete from coupons where id = '" + couponId + "'";
+        String sql = "delete * from coupons where id = '" + couponId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -100,6 +100,20 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         connectionPool.restoreConnection(connection);
         return coupons;
+
+    }
+
+    @Override
+    public void deleteAllCouponsByCompany(int companyId) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "delete * from coupons where companyId = '" + companyId + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        }
+
+        connectionPool.restoreConnection(connection);
 
     }
 
@@ -176,7 +190,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
     }
 
-    public static Object getLock(){
+    public static Object getLock() {
         return lock;
     }
 }

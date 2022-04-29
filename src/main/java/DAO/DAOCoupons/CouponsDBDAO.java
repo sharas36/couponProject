@@ -201,33 +201,65 @@ public class CouponsDBDAO implements CouponsDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.getResultSet();
         }
-            while (resultSet.next()) {
-                int idCoupon = resultSet.getInt("couponId");
-                int companyId = resultSet.getInt("companyId");
-                String categoryName = resultSet.getString("categoryName");
-                String couponName = resultSet.getString("couponName");
-                String description = resultSet.getString("description");
-                Date startDate = resultSet.getDate("startDate");
-                Date endDate = resultSet.getDate("endDate");
-                int amount = resultSet.getInt("amount");
-                double price = resultset.getDouble("price");
-                String image = resultSet.getString("image");
-                Coupon coupon = new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image);
-                coupons.add(coupon);
-            }
-        if(resultset.first()) {
+        while (resultSet.next()) {
+            int idCoupon = resultSet.getInt("couponId");
+            int companyId = resultSet.getInt("companyId");
+            String categoryName = resultSet.getString("categoryName");
+            String couponName = resultSet.getString("couponName");
+            String description = resultSet.getString("description");
+            Date startDate = resultSet.getDate("startDate");
+            Date endDate = resultSet.getDate("endDate");
+            int amount = resultSet.getInt("amount");
+            double price = resultset.getDouble("price");
+            String image = resultSet.getString("image");
+            Coupon coupon = new Coupon(couponName, description, companyId,
+                    amount, price, categoryName, startDate, endDate, image);
+            coupons.add(coupon);
+        }
+        if (resultset.first()) {
             sql = "delete * from coupons where endDate <= '" + date + "'";
             synchronized (lock) {
                 preparedStatement = connection.prepareStatement(sql);
             }
+
+            insertIntoDeletedCoupons(coupons);
         }
         connectionPool.restoreConnection(connection);
         return coupons == null;
     }
 
+    private void insertIntoDeletedCoupons(List<Coupon> coupons) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        for (Coupon coupon : coupons) {
 
-    public static Object getLock() {
-        return lock;
+            String sql = "insert into coupons (companyId, categoryName, " +
+                    "couponName, description, startDate ,endDate, amount, price, image,couponId) values (?,?,?,?,?,?,?,?,?,?)";
+
+            synchronized (lock) {
+
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, coupon.getCompanyId());
+                preparedStatement.setString(2, coupon.getCategory());
+                preparedStatement.setString(3, coupon.getCouponName());
+                preparedStatement.setString(4, coupon.getDescription());
+                preparedStatement.setDate(5, coupon.getStartDate());
+                preparedStatement.setDate(6, coupon.getEndDate());
+                preparedStatement.setInt(7, coupon.getAmount());
+                preparedStatement.setDouble(8, coupon.getPrice());
+                preparedStatement.setString(9, coupon.getImageURL());
+                preparedStatement.setInt(10, coupon.getCouponId());
+
+                preparedStatement.execute();
+
+            }
+
+
+        }
+
+//
+//        public static Object getLock () {
+//            return lock;
+//        }
     }
 }

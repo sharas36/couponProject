@@ -6,8 +6,15 @@ data accsess from remote.
 alex tasks:
 
 to complete customer dbDao class + Main checks. Done!!!!!!!!!!!
-+check coupon dbDao (pluse comment and review for david tasks)
++check coupon dbDao (plus comment and review for david tasks)
 
 
 shared tasks:
-1. learn about stack!!
+
+create function of deleted insert and to deleted from them.
+insert the functions to the relevant classes (fasad and dbadao as well).
+
+to update the customer fasad class.
+coupons purchased and deleted coupons purchased function
+
+to complete unitTest to all dbDao

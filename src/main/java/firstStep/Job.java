@@ -2,6 +2,7 @@ package firstStep;
 
 import DAO.DAOCoupons.CouponsDBDAO;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,40 +10,26 @@ import java.util.List;
 
 public class Job extends Thread {
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstanse();
-    private List<Coupon> coupons = new ArrayList<>();
     private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
 
     @Override
     public void run() {
-        connectionPool.getConnection();
-        try {
-            coupons = couponsDBDAO.getAllCoupons();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         while (true) {
             try {
-                synchronized (couponsDBDAO.getLock()) {
-                    for (Coupon coupon : coupons) {
-                        if (expireCheck(coupon.getEndDate())) {
-                            couponsDBDAO.deleteCoupon(coupon.getCouponId());
-                        }
-                    }
+                if(couponsDBDAO.getExpired()){
+                    System.out.println("All coupons are valid");
                 }
-                sleep(1000 * 60 * 60);
-
-            } catch (Exception e) {
+                else{
+                    System.out.println("All expired coupons are deleted");
+                }
+                sleep(1000 * 60 *60 * 24);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
-    public boolean expireCheck(Date exp) {
-        Date current = new Date(System.currentTimeMillis());
-        return exp.getTime() <= current.getTime();
-    }
 }

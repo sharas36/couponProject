@@ -7,6 +7,7 @@ import firstStep.Coupon;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CouponsDBDAO implements CouponsDAO {
 
@@ -189,6 +190,42 @@ public class CouponsDBDAO implements CouponsDAO {
         return id;
 
     }
+
+    public boolean getExpired() throws SQLException {
+        List<Coupon> coupons = null;
+        Connection connection = connectionPool.getConnection();
+        Date date = new Date(System.currentTimeMillis());
+        String sql = "select * from coupons where endDate <= '" + date + "'";
+        ResultSet resultSet;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.getResultSet();
+        }
+            while (resultSet.next()) {
+                int idCoupon = resultSet.getInt("couponId");
+                int companyId = resultSet.getInt("companyId");
+                String categoryName = resultSet.getString("categoryName");
+                String couponName = resultSet.getString("couponName");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                Coupon coupon = new Coupon(couponName, description, companyId,
+                        amount, price, categoryName, startDate, endDate, image);
+                coupons.add(coupon);
+            }
+        if(resultset.first()) {
+            sql = "delete * from coupons where endDate <= '" + date + "'";
+            synchronized (lock) {
+                preparedStatement = connection.prepareStatement(sql);
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons == null;
+    }
+
 
     public static Object getLock() {
         return lock;

@@ -61,7 +61,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "delete * from coupons where id = '" + couponId + "'";
+        String sql = "update coupons set deleted = " + 1 + " where id = '" + couponId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -75,7 +75,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Connection connection = connectionPool.getConnection();
 
         ArrayList<Coupon> coupons = new ArrayList<>();
-        String sql = "select * from coupons";
+        String sql = "select * from coupons where deleted = " + 0;
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         CompaniesDBDAO companiesDBDAO;
@@ -109,7 +109,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "delete * from coupons where companyId = '" + companyId + "'";
+        String sql = "update coupons set deleted = " + 1 + " where companyId = '" + companyId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
         }
@@ -121,7 +121,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public Coupon getOneCoupon(int couponId) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
-        String sql = "select from coupons where id = '" + couponId + "'";
+        String sql = "select from coupons where id = '" + couponId + "'" + " and deleted = " + 0;
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery();
         Coupon coupon = null;
@@ -254,12 +254,39 @@ public class CouponsDBDAO implements CouponsDAO {
 
             }
 
+            connectionPool.restoreConnection(connection);
+        }
+    }
+
+    private void insertIntoDeletedCoupons(Coupon coupon) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "insert into coupons (companyId, categoryName, " +
+                "couponName, description, startDate ,endDate, amount, price, image,couponId) values (?,?,?,?,?,?,?,?,?,?)";
+
+        synchronized (lock) {
+
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, coupon.getCompanyId());
+            preparedStatement.setString(2, coupon.getCategory());
+            preparedStatement.setString(3, coupon.getCouponName());
+            preparedStatement.setString(4, coupon.getDescription());
+            preparedStatement.setDate(5, coupon.getStartDate());
+            preparedStatement.setDate(6, coupon.getEndDate());
+            preparedStatement.setInt(7, coupon.getAmount());
+            preparedStatement.setDouble(8, coupon.getPrice());
+            preparedStatement.setString(9, coupon.getImageURL());
+            preparedStatement.setInt(10, coupon.getCouponId());
+
+            preparedStatement.execute();
 
         }
 
-//
-//        public static Object getLock () {
-//            return lock;
-//        }
+        connectionPool.restoreConnection(connection);
+    }
+
+    private void restoreAllDeletedCoupons(){
+
     }
 }

@@ -15,6 +15,7 @@ public class Company extends User{
 	private String email;
 	private String password;
 	private List<Coupon> coupons = new ArrayList<Coupon>();
+	private Boolean deleted = false;
 
 
 
@@ -43,5 +44,9 @@ public class Company extends User{
 
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
+	}
+
+	public void setDeleted(){
+		this.deleted = !this.deleted;
 	}
 }

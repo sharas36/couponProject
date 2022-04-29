@@ -91,6 +91,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
         String sql = "delete from companies where id = '" + companyId + "'";
         synchronized (lock) {
+            addToDeletedCompanies(getOneCompany(companyId));
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
         }
@@ -101,7 +102,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
         Connection connection = connectionPool.getConnection();
 
         ArrayList<Company> companies = new ArrayList<Company>();
-        String sql = "select * from coupons";
+        String sql = "select * from companies";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -164,6 +165,42 @@ public class CompaniesDBDAO implements CompaniesDAO {
         connectionPool.restoreConnection(connection);
         return id;
 
+    }
+
+    public void addToDeletedCompanies(Company company) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "insert into deletedCompanies (companyId, name, email, password) values ('" +
+                company.getCompanyId() + "', '" + company.getCompanyName() + "', '" + company.getEmail() + "', '" + company.getPassword() + "')";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.execute();
+        }
+        connectionPool.restoreConnection(connection);
+    }
+
+    public void restoreAllDeletedCompanies() throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "select * from deletedCompanies";
+        ResultSet resultSet;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+        }
+            while (resultSet.next()) {
+                String companyName = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int id = resultSet.getInt("companyId");
+                Company company = new Company(id, companyName, email, password);
+                addCompany(company);
+                sql = "delete from deletedCompanies where companyId = '" + company.getCompanyId() + "'";
+                synchronized (lock) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                }
+            }
+        connectionPool.restoreConnection(connection);
     }
 
 

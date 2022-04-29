@@ -25,4 +25,8 @@ public interface CompaniesDAO {
 
     public boolean isThisNameExist(String companyName) throws SQLException;
 
+    public void addToDeletedCompanies(Company company) throws SQLException;
+
+    public void restoreAllDeletedCompanies() throws SQLException;
+
 }

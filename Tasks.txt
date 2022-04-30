@@ -1,4 +1,5 @@
 david tasks:
+
 to complete unitTest coupons
 add to all relevant functions update to deleted in customers
 coupons purchased and deleted coupons purchased function

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import static java.lang.Thread.sleep;
+
 public class ConnectionPool {
     private static ConnectionPool instanse = new ConnectionPool();
 
@@ -16,8 +18,6 @@ public class ConnectionPool {
     private static final String PASSWORD = "student";
     private static final String CONNECTION_STRING = "jdbc:mysql://" + DOMAIN_STRING + "/" + DB_NAME + "?user="
             + USER_NAME + "&password=" + PASSWORD;
-    //	private List<Connection> connectionPool = new ArrayList<Connection>();
-//	private List<Connection> connectionsInUse = new ArrayList<Connection>();
     private Stack<Connection> connectionPool = new Stack<>();
 
     // CONNECTION_STRING:
@@ -51,20 +51,24 @@ public class ConnectionPool {
     }
 
     public synchronized Connection getConnection() {
-        //Connection connection = connectionPool.get(connectionPool.size() - 1);
-
-
-//		connectionPool.remove(connectionPool.size() - 1);
-//		connectionsInUse.add(connection);
-
-        return connectionPool.pop();
+        while(true){
+            if(connectionPool.size() > 0){
+                return connectionPool.pop();
+            }
+            else {
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public synchronized boolean restoreConnection(Connection connection) {
 
         return connectionPool.add(connection);
 
-        //return connectionsInUse.remove(connection);
     }
 
     public void closeAllConnections() throws SQLException { ////check all connections not in use

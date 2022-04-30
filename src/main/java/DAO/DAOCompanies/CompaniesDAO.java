@@ -19,13 +19,13 @@ public interface CompaniesDAO {
 
     public Company getOneCompany(int companyId) throws SQLException;
 
-    public int getCompanyIdByEmail(String email) throws SQLException;
+    public int getCompanyId(String email) throws SQLException;
 
     public boolean isThisMailExist(String email) throws SQLException;
 
     public boolean isThisNameExist(String companyName) throws SQLException;
 
-    public void addToDeletedCompanies(Company company) throws SQLException;
+    public void restoreDeletedCompany(String email) throws SQLException;
 
     public void restoreAllDeletedCompanies() throws SQLException;
 

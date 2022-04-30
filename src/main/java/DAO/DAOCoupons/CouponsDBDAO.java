@@ -147,13 +147,18 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public boolean addCouponPurchase(int couponId, int customerId) {
+    public boolean addCouponPurchase(int couponId, int customerId) { //To be done!!!!!!
         return false;
     }
 
 
-    public void deleteCouponPurchase(int couponId, int customerId) {
+    public void deleteCouponPurchase(int couponId, int customerId) { //To be done!!!!!!
 
+    }
+
+    public List<Coupon> getAllCouponsByCustomer(int customerId){//To be done!!!!!!
+
+        return null;
     }
 
     @Override

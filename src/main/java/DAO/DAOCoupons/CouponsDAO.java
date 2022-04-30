@@ -5,6 +5,7 @@ import firstStep.Coupon;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface CouponsDAO {
@@ -20,6 +21,7 @@ public interface CouponsDAO {
     public boolean isThisCouponExist(String couponName) throws SQLException;
     public boolean getExpired() throws SQLException;
     public void restoreAllDeletedCoupons() throws SQLException;
+    public List<Coupon> getAllCouponsByCustomer(int customerId);
 
 
 }

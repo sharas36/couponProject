@@ -165,7 +165,7 @@ public class CouponsDBDAO implements CouponsDAO {
         if (coupon.getAmount() > 0 & customer != null) {
             customerAndCouponDBSAO.addCouponsAndCustomer(customerId, couponId);
             setAmountOfCoupons(coupon.getAmount() - 1, couponId);
-
+            return true;
         }
 
 

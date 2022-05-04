@@ -7,11 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CustomerAndCouponDBSAO {
+public class CustomerAndCoupon{
 
     private ConnectionPool connectionPool = ConnectionPool.getInstanse();
     private PreparedStatement preparedStatement;
     private ResultSet resultset;
+
     private Object lock = new Object();
 
 
@@ -27,10 +28,13 @@ public class CustomerAndCouponDBSAO {
         return resultset.first();
     }
 
-    public void addCouponsAndCustomer(int customerId , int couponId) {
+    public void addCouponsAndCustomer(int customerId, int couponId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
         String sql = "insert into customerandcoupons (customerId, companyId) values ('" +
-               customerId + "', '" + couponId + "')";
+                customerId + "', '" + couponId + "')";
     }
+
+    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {}
 
 
 }

@@ -1,5 +1,6 @@
 package DAO.DAOCoupons;
 
+import DAO.CustomerAndCoupons.CustomerAndCoupon;
 import DAO.CustomerAndCoupons.CustomerAndCouponDBSAO;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
@@ -19,8 +20,8 @@ public class CouponsDBDAO implements CouponsDAO {
     private ResultSet resultset;
     private CompaniesDBDAO companiesDBDAO;
     private CustomersDBDAO customersDBDAO;
-    CustomerAndCouponDBSAO customerAndCouponDBSAO;
     private static Object lock = new Object();
+    private CustomerAndCoupon customerAndCoupon;
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
@@ -155,19 +156,14 @@ public class CouponsDBDAO implements CouponsDAO {
 
     @Override
     public boolean addCouponPurchase(int customerId, int couponId) throws SQLException {
-
-        if (customerAndCouponDBSAO.isCustomerAndCouponExist(customerId, couponId)) {
-            return false;
-        }
-
         Coupon coupon = getOneCoupon(couponId);
         Customer customer = customersDBDAO.getCustomer(customerId);
-        if (coupon.getAmount() > 0 & customer != null) {
-            customerAndCouponDBSAO.addCouponsAndCustomer(customerId, couponId);
+
+        if (coupon.getAmount() > 0 && customer != null) {
+            if (!customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
             setAmountOfCoupons(coupon.getAmount() - 1, couponId);
             return true;
         }
-
 
         return false;
     }
@@ -187,9 +183,23 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
 
-    public void deleteCouponPurchase(int couponId, int customerId) { //To be done!!!!!!
+    public boolean deleteCouponPurchaseByCustomer(int couponId, int customerId) throws SQLException {
 
+        Coupon coupon = getOneCoupon(couponId);
+        Customer customer = customersDBDAO.getCustomer(customerId);
+
+        if (coupon.getAmount() > 0 && customer != null) {
+
+            if (customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
+            setAmountOfCoupons(coupon.getAmount() + 1, couponId);
+            customerAndCoupon.deleteCouponPurchase(couponId,customerId);
+            return true;
+        }
+
+        return false;
     }
+
+
 
     public List<Coupon> getAllCouponsByCustomer(int customerId) {//To be done!!!!!!
 
@@ -213,6 +223,7 @@ public class CouponsDBDAO implements CouponsDAO {
         return false;
     }
 
+
     public int getCouponIdByCouponName(String couponName) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
@@ -231,7 +242,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
     }
 
-    public boolean getExpired() throws SQLException {
+    public boolean isExpired() throws SQLException {
         Connection connection = connectionPool.getConnection();
         Date date = new Date(System.currentTimeMillis());
         String sql = "select * from coupons where endDate <= '" + date + "'";

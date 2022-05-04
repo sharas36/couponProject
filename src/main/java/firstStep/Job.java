@@ -17,7 +17,7 @@ public class Job extends Thread {
     public void run() {
         while (true) {
             try {
-                if(couponsDBDAO.getExpired()){
+                if(couponsDBDAO.isExpired()){
                     System.out.println("All coupons are valid");
                 }
                 else{

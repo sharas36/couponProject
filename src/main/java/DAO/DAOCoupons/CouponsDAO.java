@@ -19,7 +19,7 @@ public interface CouponsDAO {
     public boolean addCouponPurchase(int couponId, int customerId) throws SQLException;
     public void deleteCouponPurchase(int couponId, int customerId);
     public boolean isThisCouponExist(String couponName) throws SQLException;
-    public boolean getExpired() throws SQLException;
+    public boolean isExpired() throws SQLException;
     public void restoreAllDeletedCoupons() throws SQLException;
     public List<Coupon> getAllCouponsByCustomer(int customerId);
 

@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CustomerAndCoupon{
+public class CustomerAndCoupon {
 
     private ConnectionPool connectionPool = ConnectionPool.getInstanse();
     private PreparedStatement preparedStatement;
@@ -32,9 +32,23 @@ public class CustomerAndCoupon{
         Connection connection = connectionPool.getConnection();
         String sql = "insert into customerandcoupons (customerId, companyId) values ('" +
                 customerId + "', '" + couponId + "')";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
     }
 
-    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {}
+    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "delete from customerandcoupons where customeId = '" + customerId + "'  and couponId = '" + couponId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+
+    }
 
 
 }

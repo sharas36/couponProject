@@ -1,7 +1,6 @@
 package DAO.DAOCoupons;
 
 import DAO.CustomerAndCoupons.CustomerAndCoupon;
-import DAO.CustomerAndCoupons.CustomerAndCouponDBSAO;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Company;
@@ -160,12 +159,19 @@ public class CouponsDBDAO implements CouponsDAO {
         Customer customer = customersDBDAO.getCustomer(customerId);
 
         if (coupon.getAmount() > 0 && customer != null) {
+
             if (!customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
+            customerAndCoupon.addCouponsAndCustomer(customerId, couponId);
             setAmountOfCoupons(coupon.getAmount() - 1, couponId);
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {
+        System.out.println("no need for now");
     }
 
     public void setAmountOfCoupons(int amount, int couponsId) throws SQLException {
@@ -192,14 +198,12 @@ public class CouponsDBDAO implements CouponsDAO {
 
             if (customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
             setAmountOfCoupons(coupon.getAmount() + 1, couponId);
-            customerAndCoupon.deleteCouponPurchase(couponId,customerId);
+            customerAndCoupon.deleteCouponPurchase(couponId, customerId);
             return true;
         }
 
         return false;
     }
-
-
 
     public List<Coupon> getAllCouponsByCustomer(int customerId) {//To be done!!!!!!
 

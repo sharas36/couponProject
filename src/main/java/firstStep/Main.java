@@ -164,48 +164,10 @@ public class Main {
 
         switch (Integer.parseInt(choice)) {
             case 1:
-                System.out.println("Company name: ");
-                String companyName = scanner.nextLine();
-                System.out.println("Email: ");
-                String email = scanner.nextLine();
-                System.out.println("Password: ");
-                String password = scanner.nextLine();
-                try {
-                    adminFacade.addCompany(new Company(companyName, email, password));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (SystemException e) {
-                    e.printStackTrace();
-                }
+                adminAddCompany(adminFacade);
                 break;
             case 2:
-                System.out.println("What company do you want to update? choose number or press 0 for all companies");
-                String companyChoice = scanner.next();
-                List<Company> companies= adminFacade.getAllCompanies();
-                try {
-                    Integer.parseInt(companyChoice);
-                } catch (NumberFormatException e) {
-                    System.out.println("You need to insert number. please try again");
-                }
-
-                while (true){
-                    if(Integer.parseInt(companyChoice) != 0){
-                        try {
-                            Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (SystemException e) {
-                            e.printStackTrace();
-                            int size = companies.size();
-                            System.out.println("You need to choose 0 - " + size);
-                            companyChoice = scanner.next();
-                        }
-                    }
-                    for (int i = 0; i < companies.size(); i++) {
-                        System.out.println(companies.get(i).toString());
-                    }
-                }
-                adminFacade.updateCompany();
+                adminUpdateCompany(adminFacade);
                 break;
             case 3:
 
@@ -237,9 +199,66 @@ public class Main {
         }
         adminMenu(adminFacade);
     }
-    private static void customerMenu() {
+
+    public static void adminAddCompany(AdminFacade adminFacade){
+        System.out.println("Company name: ");
+        String companyName = scanner.nextLine();
+        System.out.println("Email: ");
+        String email = scanner.nextLine();
+        System.out.println("Password: ");
+        String password = scanner.nextLine();
+        try {
+            adminFacade.addCompany(new Company(companyName, email, password));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void companyMenu() {
+    public static void adminUpdateCompany(AdminFacade adminFacade) throws SystemException, SQLException {
+        System.out.println("What company do you want to update? choose number or press 0 for all companies");
+        String companyChoice = scanner.next();
+        List<Company> companies= adminFacade.getAllCompanies();
+        try {
+            Integer.parseInt(companyChoice);
+        } catch (NumberFormatException e) {
+            System.out.println("You need to insert number. please try again");
+        }
+
+        while (true){
+            if(Integer.parseInt(companyChoice) != 0){
+                try {
+                    Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
+                    break;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (SystemException e) {
+                    e.printStackTrace();
+                    int size = companies.size();
+                    System.out.println("You need to choose 0 - " + size);
+                }
+            }
+            else{
+                for (int i = 0; i < companies.size(); i++) {
+                    System.out.println(companies.get(i).toString());
+                    System.out.println("Please choose a company");
+                }
+            }
+            companyChoice = scanner.next();
+        }
+        System.out.println("Please insert new email");
+        String email = scanner.nextLine();
+        System.out.println("Please insert new password");
+        String password = scanner.nextLine();
+        adminFacade.updateCompany(adminFacade.getOneCompany(Integer.parseInt(companyChoice)), email, password);
+    }
+
+    public static void customerMenu() {
+    }
+
+
+
+    public static void companyMenu() {
     }
 }

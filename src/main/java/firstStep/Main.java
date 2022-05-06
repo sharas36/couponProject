@@ -29,7 +29,7 @@ public class Main {
         MainFacade mainFacade = userCheckScreen();
         User user = login(mainFacade);
         if (user instanceof Admin) {
-            adminMenu();
+            adminMenu(adminFacade);
         } else if (user instanceof Company) {
             companyMenu();
         } else {

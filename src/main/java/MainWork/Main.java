@@ -1,4 +1,4 @@
-package firstStep;
+package MainWork;
 
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
@@ -11,6 +11,7 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
+import firstStep.SystemException;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -29,9 +30,9 @@ public class Main {
         if (user instanceof Admin) {
             adminMenu((AdminFacade) mainFacade);
         } else if (user instanceof Company) {
-            companyMenu((CompanyFacade)mainFacade);
+            companyMenu((CompanyFacade) mainFacade);
         } else {
-            customerMenu((CustomerFacade)mainFacade);
+            customerMenu((CustomerFacade) mainFacade);
         }
     }
 
@@ -49,7 +50,7 @@ public class Main {
             System.out.println("You need to insert number 1-3. please try again");
             userCheckScreen();
         }
-        switch (choice) {
+        switch (Integer.parseInt(choice)) {
             case 1:
                 return new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
             case 2:
@@ -96,72 +97,74 @@ public class Main {
 
     public static void adminMenu(AdminFacade adminFacade) throws SQLException {
 
-        System.out.println("1. Add company \n" +
-                "2. Update company \n" +
-                "3. Delete company \n" +
-                "4. Show all companies \n" +
-                "5. Show one company \n" +
-                "6. Add customer \n" +
-                "7. Update customer \n" +
-                "8. Delete customer \n" +
-                "9. Show all customers \n" +
-                "10. Show one customer");
-        String choice = scanner.next();
-        try {
-            Integer.parseInt(choice);
-        } catch (NumberFormatException e) {
-            System.out.println("You need to insert number 1-10. please try again");
-            adminMenu(adminFacade);
-        }
 
-        switch (Integer.parseInt(choice)) {
-            case 1:
-                try {
-                    adminAddCompany(adminFacade);
-                } catch (SystemException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                try {
-                    adminUpdateCompany(adminFacade);
-                } catch (SystemException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3:
-                try {
-                    adminDeleteCompany(adminFacade);
-                } catch (SystemException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-            case 6:
-
-                break;
-            case 7:
-
-                break;
-            case 8:
-
-                break;
-            case 9:
-
-                break;
-            case 10:
-
-                break;
-            default:
+        while (true) {
+            System.out.println("1. Add company \n" +
+                    "2. Update company \n" +
+                    "3. Delete company \n" +
+                    "4. Show all companies \n" +
+                    "5. Show one company \n" +
+                    "6. Add customer \n" +
+                    "7. Update customer \n" +
+                    "8. Delete customer \n" +
+                    "9. Show all customers \n" +
+                    "10. Show one customer");
+            String choice = scanner.next();
+            try {
+                Integer.parseInt(choice);
+            } catch (NumberFormatException e) {
                 System.out.println("You need to insert number 1-10. please try again");
+                adminMenu(adminFacade);
+            }
 
+            switch (Integer.parseInt(choice)) {
+                case 1:
+                    try {
+                        adminAddCompany(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    try {
+                        adminUpdateCompany(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        adminDeleteCompany(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+
+                    break;
+                case 7:
+
+                    break;
+                case 8:
+
+                    break;
+                case 9:
+
+                    break;
+                case 10:
+
+                    break;
+                default:
+                    System.out.println("You need to insert number 1-10. please try again");
+
+            }
         }
-        adminMenu(adminFacade);
     }
 
     public static void adminAddCompany(AdminFacade adminFacade) throws SystemException, SQLException {

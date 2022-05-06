@@ -153,6 +153,38 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
+    public ArrayList<Coupon> getAllCouponsOfCompany(int companyId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where companyId = '" + companyId + "' and deleted = 0" ;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            CompaniesDBDAO companiesDBDAO;
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+
+                companiesDBDAO = new CompaniesDBDAO();
+                Company company = companiesDBDAO.getOneCompany(companyId);
+
+                coupons.add(new Coupon(couponName, description, companyId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    @Override
     public boolean addCouponPurchase(int customerId, int couponId) throws SQLException {
         Coupon coupon = getOneCoupon(couponId);
         Customer customer = customersDBDAO.getCustomer(customerId);
@@ -171,6 +203,29 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {
         System.out.println("no need for now");
+    }
+
+    @Override
+    public void deleteAllPurchasesForOneCoupon(int couponId) throws SQLException {
+
+            Connection connection = connectionPool.getConnection();
+            String sql = "update set deleted = " + 1 + " from customerandcoupons where couponId = '" + couponId + "'";
+
+            synchronized (lock) {
+                resultset = preparedStatement.executeQuery(sql);
+                connectionPool.restoreConnection(connection);
+            }
+    }
+
+    public void deleteAllPurchasesForOneCustomer(int customerId) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+        String sql = "update set deleted = " + 1 + " from customerandcoupons where customerId = '" + customerId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
     }
 
     public void setAmountOfCoupons(int amount, int couponsId) throws SQLException {

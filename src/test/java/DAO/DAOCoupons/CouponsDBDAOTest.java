@@ -1,7 +1,7 @@
 package DAO.DAOCoupons;
 
 import firstStep.Coupon;
-import firstStep.Main;
+import MainWork.Main;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponsDBDAOTest {
-    CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-    Coupon coupon = Main.getCoupon();
+//    CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+//    Coupon coupon = Main.getCoupon();
 
 
     @Test

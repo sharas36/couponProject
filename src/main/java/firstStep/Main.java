@@ -8,6 +8,7 @@ import Facade.CompanyFacade;
 import Facade.CustomerFacade;
 import Facade.MainFacade;
 import Users.Admin;
+import Users.Company;
 import Users.User;
 
 import java.sql.Date;
@@ -49,9 +50,9 @@ public class Main {
         String email = scanner.nextLine();
         System.out.println("Password: ");
         String password = scanner.nextLine();
-
-        if (mainFacade instanceof AdminFacade){
-            mainFacade.login(email, password);
+        login(mainFacade);
+        if (mainFacade instanceof AdminFacade) {
+            adminMenu();
         }
 
 
@@ -78,10 +79,6 @@ public class Main {
     }
 
 
-    public void loginScreen() {
-
-    }
-
     public static MainFacade userCheckScreen() {
 
         System.out.println("1. Admin \n" +
@@ -89,7 +86,7 @@ public class Main {
                 "3. customer");
 
         String choice = scanner.next();
-        try{
+        try {
             Integer.parseInt(choice);
         } catch (NumberFormatException e) {
             System.out.println("You need to insert number 1-3. please try again");
@@ -109,8 +106,115 @@ public class Main {
         return null;
     }
 
-    public static void login(MainFacade mainFacade){
+    public static void login(MainFacade mainFacade) throws SystemException, SQLException {
+        System.out.println("Email: ");
+        String email = scanner.nextLine();
+        System.out.println("Password: ");
+        String password = scanner.nextLine();
+        try {
+            mainFacade.login(email, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+            System.out.println("Do you want to choose again your type again? y/n");
+            switch (scanner.next()) {
+                case "y":
+                    mainFacade = userCheckScreen();
+                    break;
+                case "n":
+                    break;
+                default:
+                    System.out.println("Wrong choice! Please try again.");
+            }
+            login(mainFacade);
+        }
+    }
 
+    public static void adminMenu(AdminFacade adminFacade) {
 
+        System.out.println("1. Add company \n" +
+                "2. Update company \n" +
+                "3. Delete company \n" +
+                "4. Show all companies \n" +
+                "5. Show one company \n" +
+                "6. Add customer \n" +
+                "7. Update customer \n" +
+                "8. Delete customer \n" +
+                "9. Show all customers \n" +
+                "10. Show one customer");
+        String choice = scanner.next();
+        try {
+            Integer.parseInt(choice);
+        } catch (NumberFormatException e) {
+            System.out.println("You need to insert number 1-10. please try again");
+            adminMenu();
+        }
+
+        switch (Integer.parseInt(choice)) {
+            case 1:
+                System.out.println("Company name: ");
+                String companyName = scanner.nextLine();
+                System.out.println("Email: ");
+                String email = scanner.nextLine();
+                System.out.println("Password: ");
+                String password = scanner.nextLine();
+                try {
+                    adminFacade.addCompany(new Company(companyName, email, password));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (SystemException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                System.out.println("What company do you want to update? choose number or press 0 for all companies");
+                String companyChoice = scanner.next();
+                try {
+                    Integer.parseInt(companyChoice);
+                } catch (NumberFormatException e) {
+                    System.out.println("You need to insert number. please try again");
+                }
+
+                while (true){
+                    try {
+                        Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
+                }
+                adminFacade.updateCompany();
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+            case 5:
+
+                break;
+            case 6:
+
+                break;
+            case 7:
+
+                break;
+            case 8:
+
+                break;
+            case 9:
+
+                break;
+            case 10:
+
+                break;
+            default:
+                System.out.println("You need to insert number 1-10. please try again");
+
+        }
+        adminMenu(adminFacade);
     }
 }

@@ -39,11 +39,11 @@ public class AdminFacade extends MainFacade {
     }
 
     // wait for hibernate (merge function).
-    public void updateCompany(Company company) throws SystemException, SQLException {
+    public void updateCompany(Company company, String email, String password) throws SystemException, SQLException {
         if (!this.companiesDBDAO.isCompanyExist(company.getEmail(), company.getPassword())) {
             throw new SystemException("This company isnt exist");
         }
-        this.companiesDBDAO.updateCompany(company, company.getEmail(), company.getPassword());
+        this.companiesDBDAO.updateCompany(company, email, password);
     }
 
     public void deleteCompany(int companyId) throws SQLException, SystemException {

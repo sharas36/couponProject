@@ -18,6 +18,12 @@ public class Admin extends User{
 //	private List<Coupon> coupons = new ArrayList<>();
 //	private List<Customer> customers = new ArrayList<>();
 
+
+	public Admin(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
+
 	public Admin(String email, String password, String firstName, String lastName) {
 		super(email, password);
 		this.firstName = firstName;

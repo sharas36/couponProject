@@ -22,7 +22,11 @@ public class Customer extends User {
 		this.lastName = lastName;
 	}
 
-	public void setDeleted(){
+    public Customer(String email, String password) {
+		super(email, password);
+    }
+
+    public void setDeleted(){
 		this.deleted = !this.deleted;
 	}
 }

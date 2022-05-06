@@ -9,11 +9,13 @@ import Facade.CustomerFacade;
 import Facade.MainFacade;
 import Users.Admin;
 import Users.Company;
+import Users.Customer;
 import Users.User;
 
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -46,17 +48,19 @@ public class Main {
 //        coupon.setPrice(35.7);
 
         MainFacade mainFacade = userCheckScreen();
-        System.out.println("Email: ");
-        String email = scanner.nextLine();
-        System.out.println("Password: ");
-        String password = scanner.nextLine();
-        login(mainFacade);
-        if (mainFacade instanceof AdminFacade) {
+        User user = login(mainFacade);
+        if (user instanceof Admin) {
             adminMenu();
         }
-
-
+        else if (user instanceof Company) {
+            companyMenu();
+        }
+        else{
+            customerMenu();
+        }
     }
+
+
 
     public static Coupon getCoupon() {
 
@@ -106,7 +110,7 @@ public class Main {
         return null;
     }
 
-    public static void login(MainFacade mainFacade) throws SystemException, SQLException {
+    public static User login(MainFacade mainFacade) throws SystemException, SQLException {
         System.out.println("Email: ");
         String email = scanner.nextLine();
         System.out.println("Password: ");
@@ -129,9 +133,16 @@ public class Main {
             }
             login(mainFacade);
         }
+        if(mainFacade instanceof AdminFacade){
+            return new Admin(email, password);
+        }
+        else if(mainFacade instanceof CompanyFacade){
+            return new Company(email, password);
+        }
+        return new Customer(email, password);
     }
 
-    public static void adminMenu(AdminFacade adminFacade) {
+    public static void adminMenu(AdminFacade adminFacade) throws SystemException, SQLException {
 
         System.out.println("1. Add company \n" +
                 "2. Update company \n" +
@@ -148,7 +159,7 @@ public class Main {
             Integer.parseInt(choice);
         } catch (NumberFormatException e) {
             System.out.println("You need to insert number 1-10. please try again");
-            adminMenu();
+            adminMenu(adminFacade);
         }
 
         switch (Integer.parseInt(choice)) {
@@ -170,6 +181,7 @@ public class Main {
             case 2:
                 System.out.println("What company do you want to update? choose number or press 0 for all companies");
                 String companyChoice = scanner.next();
+                List<Company> companies= adminFacade.getAllCompanies();
                 try {
                     Integer.parseInt(companyChoice);
                 } catch (NumberFormatException e) {
@@ -177,12 +189,20 @@ public class Main {
                 }
 
                 while (true){
-                    try {
-                        Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (SystemException e) {
-                        e.printStackTrace();
+                    if(Integer.parseInt(companyChoice) != 0){
+                        try {
+                            Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (SystemException e) {
+                            e.printStackTrace();
+                            int size = companies.size();
+                            System.out.println("You need to choose 0 - " + size);
+                            companyChoice = scanner.next();
+                        }
+                    }
+                    for (int i = 0; i < companies.size(); i++) {
+                        System.out.println(companies.get(i).toString());
                     }
                 }
                 adminFacade.updateCompany();
@@ -216,5 +236,10 @@ public class Main {
 
         }
         adminMenu(adminFacade);
+    }
+    private static void customerMenu() {
+    }
+
+    private static void companyMenu() {
     }
 }

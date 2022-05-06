@@ -34,6 +34,11 @@ public class Company extends User{
 		this.companyId = id;
 	}
 
+	public Company(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
+
 	public void addCoupon(Coupon coupon){
 		coupons.add(coupon);
 	}

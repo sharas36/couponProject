@@ -1,6 +1,5 @@
 package DAO.DAOCoupons;
 
-import DAO.CustomerAndCoupons.CustomerAndCoupon;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Company;
@@ -20,7 +19,7 @@ public class CouponsDBDAO implements CouponsDAO {
     private CompaniesDBDAO companiesDBDAO;
     private CustomersDBDAO customersDBDAO;
     private static Object lock = new Object();
-    private CustomerAndCoupon customerAndCoupon;
+
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
@@ -160,8 +159,8 @@ public class CouponsDBDAO implements CouponsDAO {
 
         if (coupon.getAmount() > 0 && customer != null) {
 
-            if (!customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
-            customerAndCoupon.addCouponsAndCustomer(customerId, couponId);
+            if (!isCustomerAndCouponExist(customerId, couponId)) ;
+           addPurchase(customerId, couponId);
             setAmountOfCoupons(coupon.getAmount() - 1, couponId);
             return true;
         }
@@ -189,20 +188,15 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
 
-    public boolean deleteCouponPurchaseByCustomer(int couponId, int customerId) throws SQLException {
+    public void deletePurchased (int couponId, int customerId) throws SQLException {
 
-        Coupon coupon = getOneCoupon(couponId);
-        Customer customer = customersDBDAO.getCustomer(customerId);
+        Connection connection = connectionPool.getConnection();
+        String sql = "update set deleted = " + 1 + " from customerandcoupons where customeId = '" + customerId + "'  and couponId = '" + couponId + "'";
 
-        if (coupon.getAmount() > 0 && customer != null) {
-
-            if (customerAndCoupon.isCustomerAndCouponExist(customerId, couponId)) ;
-            setAmountOfCoupons(coupon.getAmount() + 1, couponId);
-            customerAndCoupon.deleteCouponPurchase(couponId, customerId);
-            return true;
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
         }
-
-        return false;
     }
 
     public List<Coupon> getAllCouponsByCustomer(int customerId) {//To be done!!!!!!
@@ -278,4 +272,41 @@ public class CouponsDBDAO implements CouponsDAO {
 
         connectionPool.restoreConnection(connection);
     }
+
+    // below is the function of customerAndCoupon table.
+
+    public boolean isCustomerAndCouponExist(int customerId, int couponsId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from customerandcoupons where customerId ='" + customerId + "' and couponId = '" + couponsId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+
+        return resultset.first();
+    }
+
+    public void addPurchase(int customerId, int couponId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "insert into customerandcoupons (customerId, companyId) values ('" +
+                customerId + "', '" + couponId + "')";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+    }
+
+    public void deletePurchasedCouponFromCustomerAndCoupon(int couponId, int customerId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "delete from customerandcoupons where customeId = '" + customerId + "'  and couponId = '" + couponId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+
+    }
+
 }

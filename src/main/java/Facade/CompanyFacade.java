@@ -12,9 +12,11 @@ public class CompanyFacade extends MainFacade {
 
     private int companyId;
 
+
     public CompanyFacade(CompaniesDBDAO companiesDBDAO, CouponsDBDAO couponsDBDAO, CustomersDBDAO customersDBDAO) {
         super(companiesDBDAO, couponsDBDAO, customersDBDAO);
     }
+
 
     @Override
     public Boolean login(String email, String password) throws SQLException, SystemException {
@@ -35,8 +37,6 @@ public class CompanyFacade extends MainFacade {
         couponsDBDAO.addCoupon(coupon);
         companiesDBDAO.getOneCompany(coupon.getCompanyId()).addCoupon(coupon);
     }
-
-
 
 
     public void setCompanyId(String email) throws SQLException {

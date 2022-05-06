@@ -51,15 +51,12 @@ public class Main {
         User user = login(mainFacade);
         if (user instanceof Admin) {
             adminMenu();
-        }
-        else if (user instanceof Company) {
+        } else if (user instanceof Company) {
             companyMenu();
-        }
-        else{
+        } else {
             customerMenu();
         }
     }
-
 
 
     public static Coupon getCoupon() {
@@ -110,7 +107,7 @@ public class Main {
         return null;
     }
 
-    public static User login(MainFacade mainFacade) throws SystemException, SQLException {
+    public static User login(MainFacade mainFacade) throws SQLException {
         System.out.println("Email: ");
         String email = scanner.nextLine();
         System.out.println("Password: ");
@@ -133,16 +130,15 @@ public class Main {
             }
             login(mainFacade);
         }
-        if(mainFacade instanceof AdminFacade){
+        if (mainFacade instanceof AdminFacade) {
             return new Admin(email, password);
-        }
-        else if(mainFacade instanceof CompanyFacade){
+        } else if (mainFacade instanceof CompanyFacade) {
             return new Company(email, password);
         }
         return new Customer(email, password);
     }
 
-    public static void adminMenu(AdminFacade adminFacade) throws SystemException, SQLException {
+    public static void adminMenu(AdminFacade adminFacade) throws SQLException {
 
         System.out.println("1. Add company \n" +
                 "2. Update company \n" +
@@ -164,10 +160,18 @@ public class Main {
 
         switch (Integer.parseInt(choice)) {
             case 1:
-                adminAddCompany(adminFacade);
+                try {
+                    adminAddCompany(adminFacade);
+                } catch (SystemException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2:
-                adminUpdateCompany(adminFacade);
+                try {
+                    adminUpdateCompany(adminFacade);
+                } catch (SystemException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 3:
 
@@ -200,34 +204,28 @@ public class Main {
         adminMenu(adminFacade);
     }
 
-    public static void adminAddCompany(AdminFacade adminFacade){
+    public static void adminAddCompany(AdminFacade adminFacade) throws SystemException, SQLException {
         System.out.println("Company name: ");
         String companyName = scanner.nextLine();
         System.out.println("Email: ");
         String email = scanner.nextLine();
         System.out.println("Password: ");
         String password = scanner.nextLine();
-        try {
-            adminFacade.addCompany(new Company(companyName, email, password));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
-            e.printStackTrace();
-        }
+        adminFacade.addCompany(new Company(companyName, email, password));
     }
 
     public static void adminUpdateCompany(AdminFacade adminFacade) throws SystemException, SQLException {
         System.out.println("What company do you want to update? choose number or press 0 for all companies");
         String companyChoice = scanner.next();
-        List<Company> companies= adminFacade.getAllCompanies();
+        List<Company> companies = adminFacade.getAllCompanies();
         try {
             Integer.parseInt(companyChoice);
         } catch (NumberFormatException e) {
             System.out.println("You need to insert number. please try again");
         }
 
-        while (true){
-            if(Integer.parseInt(companyChoice) != 0){
+        while (true) {
+            if (Integer.parseInt(companyChoice) != 0) {
                 try {
                     Company company = adminFacade.getOneCompany(Integer.parseInt(companyChoice));
                     break;
@@ -238,8 +236,7 @@ public class Main {
                     int size = companies.size();
                     System.out.println("You need to choose 0 - " + size);
                 }
-            }
-            else{
+            } else {
                 for (int i = 0; i < companies.size(); i++) {
                     System.out.println(companies.get(i).toString());
                     System.out.println("Please choose a company");
@@ -256,7 +253,6 @@ public class Main {
 
     public static void customerMenu() {
     }
-
 
 
     public static void companyMenu() {

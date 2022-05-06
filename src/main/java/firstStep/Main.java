@@ -24,18 +24,17 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-
-
         MainFacade mainFacade = userCheckScreen();
         User user = login(mainFacade);
         if (user instanceof Admin) {
-            adminMenu(adminFacade);
+            adminMenu((AdminFacade) mainFacade);
         } else if (user instanceof Company) {
-            companyMenu();
+            companyMenu((CompanyFacade)mainFacade);
         } else {
-            customerMenu();
+            customerMenu((CustomerFacade)mainFacade);
         }
     }
+
 
     public static MainFacade userCheckScreen() {
 
@@ -131,7 +130,11 @@ public class Main {
                 }
                 break;
             case 3:
-
+                try {
+                    adminDeleteCompany(adminFacade);
+                } catch (SystemException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 4:
 
@@ -172,7 +175,22 @@ public class Main {
     }
 
     public static void adminUpdateCompany(AdminFacade adminFacade) throws SystemException, SQLException {
-        System.out.println("What company do you want to update? choose number or press 0 for all companies");
+        Company company = adminGetCompany(adminFacade);
+        System.out.println("Please insert new email");
+        String email = scanner.nextLine();
+        System.out.println("Please insert new password");
+        String password = scanner.nextLine();
+        adminFacade.updateCompany(company, email, password);
+    }
+
+    private static void adminDeleteCompany(AdminFacade adminFacade) throws SystemException, SQLException {
+
+        Company company = adminGetCompany(adminFacade);
+        adminFacade.deleteCompany(company.getCompanyId());
+    }
+
+    public static Company adminGetCompany(AdminFacade adminFacade) throws SystemException, SQLException {
+        System.out.println("What company do you want to work on? choose number or press 0 for all companies");
         String companyChoice = scanner.next();
         List<Company> companies = adminFacade.getAllCompanies();
         try {
@@ -201,17 +219,13 @@ public class Main {
             }
             companyChoice = scanner.next();
         }
-        System.out.println("Please insert new email");
-        String email = scanner.nextLine();
-        System.out.println("Please insert new password");
-        String password = scanner.nextLine();
-        adminFacade.updateCompany(adminFacade.getOneCompany(Integer.parseInt(companyChoice)), email, password);
+        return adminFacade.getOneCompany(Integer.parseInt(companyChoice));
     }
 
-    public static void customerMenu() {
+    public static void customerMenu(CustomerFacade mainFacade) {
     }
 
 
-    public static void companyMenu() {
+    public static void companyMenu(CompanyFacade mainFacade) {
     }
 }

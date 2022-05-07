@@ -41,7 +41,7 @@ public class CustomerFacade extends MainFacade{
         couponsDBDAO.addCouponPurchase(couponId, this.customerId);
     }
 
-    public List<Coupon> getAllCustomersCoupons() throws SystemException {
+    public List<Coupon> getAllCustomersCoupons() throws SystemException, SQLException {
         if(couponsDBDAO.getAllCouponsByCustomer(this.customerId) == null){
             throw new SystemException("This customer havent coupons");
         }

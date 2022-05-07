@@ -27,7 +27,7 @@ public class AdminFacade extends MainFacade {
 
     public void addCompany(Company company) throws SQLException, SystemException {
 
-        if (this.companiesDBDAO.isCompanyExist(company.getEmail(), company.getPassword())) {
+        if (this.companiesDBDAO.loginCheck(company.getEmail(), company.getPassword())) {
             throw new SystemException("This company already exist");
         }
 
@@ -40,7 +40,7 @@ public class AdminFacade extends MainFacade {
 
     // wait for hibernate (merge function).
     public void updateCompany(Company company, String email, String password) throws SystemException, SQLException {
-        if (!this.companiesDBDAO.isCompanyExist(company.getEmail(), company.getPassword())) {
+        if (!this.companiesDBDAO.loginCheck(company.getEmail(), company.getPassword())) {
             throw new SystemException("This company isnt exist");
         }
         this.companiesDBDAO.updateCompany(company, email, password);
@@ -75,32 +75,11 @@ public class AdminFacade extends MainFacade {
         this.customersDBDAO.addCustomer(customer);
     }
 
-    public void updateCustomerPassword(Customer customer, String password) throws SystemException, SQLException {
+    public void updateCustomer(Customer customer, String email, String password) throws SystemException, SQLException {
         if (!this.customersDBDAO.isThisMailExist(customer.getEmail())) {
             throw new SystemException("This customer isnt exist");
         }
-        this.customersDBDAO.updateCustomerPassword(customer, password);
-    }
-
-    public void updateCustomerEmail(Customer customer, String email) throws SystemException, SQLException {
-        if (!this.customersDBDAO.isThisMailExist(customer.getEmail())) {
-            throw new SystemException("This customer isnt exist");
-        }
-        this.customersDBDAO.updateCustomerPassword(customer, email);
-    }
-
-    public void updateCustomerFirstName(Customer customer, String firstName) throws SystemException, SQLException {
-        if (!this.customersDBDAO.isThisMailExist(customer.getEmail())) {
-            throw new SystemException("This customer isnt exist");
-        }
-        this.customersDBDAO.updateCustomerPassword(customer, firstName);
-    }
-
-    public void updateCustomerLastName(Customer customer, String lastName) throws SystemException, SQLException {
-        if (!this.customersDBDAO.isThisMailExist(customer.getEmail())) {
-            throw new SystemException("This customer isnt exist");
-        }
-        this.customersDBDAO.updateCustomerPassword(customer, lastName);
+        this.customersDBDAO.updateCustomer(customer.getCustomerId(), email, password);
     }
 
     public void deleteCustomer(int customerId) throws SQLException, SystemException {

@@ -46,9 +46,9 @@ class CouponsDBDAOTest {
 
     @Test
     void getOneCoupon() throws SQLException {
-        Coupon coupon = couponsDBDAO.getOneCoupon(2);
-        assertNotNull(coupon);
-    }
+//        Coupon coupon = couponsDBDAO.getOneCoupon(2);
+//        assertNotNull(coupon);
+//    }
 
     @Test
     void addCouponPurchase() {

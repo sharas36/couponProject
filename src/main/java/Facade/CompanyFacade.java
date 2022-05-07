@@ -21,7 +21,7 @@ public class CompanyFacade extends MainFacade {
 
     @Override
     public Boolean login(String email, String password) throws SQLException, SystemException {
-        if (companiesDBDAO.isCompanyExist(email, password)) {
+        if (companiesDBDAO.loginCheck(email, password)) {
             this.setCompanyId(email);
             return true;
         }

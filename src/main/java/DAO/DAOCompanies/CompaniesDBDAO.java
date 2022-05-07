@@ -16,57 +16,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
     private ResultSet resultset;
     private Object lock = new Object();
 
-    public Boolean isCompanyExist(String email, String password) throws SQLException {
-
-        Connection connection = connectionPool.getConnection();
-        String sql = "SELECT * from companies where email = '" + email + "' and password = '" + password + "'";
-        synchronized (lock) {
-            this.preparedStatement = connection.prepareStatement(sql);
-            this.resultset = this.preparedStatement.executeQuery();
-        }
-        connectionPool.restoreConnection(connection);
-        if (this.resultset.next()) {
-            return true;
-        }
-        return false;
-
-    }
-
-    @Override
-    public boolean isThisMailExist(String email) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-        String sql = "SELECT * from companies where email = '" + email + "'";
-        synchronized (lock) {
-            this.preparedStatement = connection.prepareStatement(sql);
-            this.resultset = this.preparedStatement.executeQuery();
-        }
-        connectionPool.restoreConnection(connection);
-        if (this.resultset.next()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isThisNameExist(String companyName) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-        String sql = "SELECT * from companies where companyName = '" + companyName + "'";
-        synchronized (lock) {
-            this.preparedStatement = connection.prepareStatement(sql);
-            this.resultset = this.preparedStatement.executeQuery();
-        }
-        connectionPool.restoreConnection(connection);
-        if (this.resultset.next()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void restoreDeletedCompany(String email) throws SQLException {
-
-    }
-
     public void addCompany(Company company) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
@@ -76,17 +25,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.execute();
             company.setCompanyId(this.getCompanyIdByEmail(company.getEmail()));
-        }
-        connectionPool.restoreConnection(connection);
-    }
-
-    public void updateCompany(Company company, String email, String password) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "update companies set email ='" + email + "', password ='" + password + "' where companyId ='" + company.getCompanyId() + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
         }
         connectionPool.restoreConnection(connection);
     }
@@ -124,6 +62,21 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return companies;
     }
 
+    public int getCompanyId(String email) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from companies where email = '" + email + "'";
+        int id = 0;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getInt("companyId");
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return id;
+    }
+
     public Company getOneCompany(int companyId) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "select from companies where id = '" + companyId + "'";
@@ -141,70 +94,60 @@ public class CompaniesDBDAO implements CompaniesDAO {
         return company;
     }
 
-    public int getCompanyId(String email) throws SQLException {
+    @Override
+    public boolean isThisMailExist(String email) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "select * from companies where email = '" + email + "'";
-        int id = 0;
+        String sql = "SELECT * from companies where email = '" + email + "'";
         synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                id = resultSet.getInt("companyId");
-            }
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
-        return id;
+        if (this.resultset.next()) {
+            return true;
+        }
+        return false;
     }
 
-    public int getCompanyIdByEmail(String email) throws SQLException {
+    @Override
+    public boolean isThisNameExist(String companyName) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "select * from companies where email = '" + email + "'";
-        int id = 0;
+        String sql = "SELECT * from companies where companyName = '" + companyName + "'";
         synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                id = rs.getInt("companyId");
-            }
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
-        return id;
-
+        if (this.resultset.next()) {
+            return true;
+        }
+        return false;
     }
 
-    public void addToDeletedCompanies(Company company) throws SQLException {
-        Connection connection = connectionPool.getConnection();
+    public Boolean loginCheck(String email, String password) throws SQLException {
 
-        String sql = "insert into deletedCompanies (companyId, name, email, password) values ('" +
-                company.getCompanyId() + "', '" + company.getCompanyName() + "', '" + company.getEmail() + "', '" + company.getPassword() + "')";
+        Connection connection = connectionPool.getConnection();
+        String sql = "SELECT * from companies where email = '" + email + "' and password = '" + password + "'";
         synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.execute();
+            this.preparedStatement = connection.prepareStatement(sql);
+            this.resultset = this.preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
+        if (this.resultset.next()) {
+            return true;
+        }
+        return false;
+
     }
 
-    public void restoreAllDeletedCompanies() throws SQLException {
+    public void updateCompany(Company company, String email, String password) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "select * from deletedCompanies";
-        ResultSet resultSet;
+        String sql = "update companies set email ='" + email + "', password ='" + password + "' where companyId ='" + company.getCompanyId() + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         }
-            while (resultSet.next()) {
-                String companyName = resultSet.getString("name");
-                String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
-                int id = resultSet.getInt("companyId");
-                Company company = new Company(id, companyName, email, password);
-                addCompany(company);
-                sql = "delete from deletedCompanies where companyId = '" + company.getCompanyId() + "'";
-                synchronized (lock) {
-                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                }
-            }
         connectionPool.restoreConnection(connection);
     }
 

@@ -17,33 +17,6 @@ public class CustomersDBDAO implements CustomersDAO {
     private ResultSet resultset;
     private Object lock = new Object();
 
-    public boolean isCustomerExist(String email, String password) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-        String sql = "select * from customers where email ='" + email + "' and password = '" + password + "'";
-        synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-            connectionPool.restoreConnection(connection);
-        }
-        if (resultset.next()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean isThisMailExist(String email) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-        String sql = "select * from customers where email ='" + email + "'";
-        synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-        }
-        connectionPool.restoreConnection(connection);
-        if (resultset.next()) {
-            return true;
-        }
-        return false;
-    }
-
     public void addCustomer(Customer customer) throws SQLException {
         Connection connection = connectionPool.getConnection();
         String sql = "insert into customers(firstName, lastName, email, password) values ('" +
@@ -66,65 +39,6 @@ public class CustomersDBDAO implements CustomersDAO {
             preparedStatement.executeUpdate();
         }
         connectionPool.restoreConnection(connection);
-    }
-
-    public void updateCustomerMail(int customerId, String email) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "update customers set email = '" + email + "' where customerId = '" + customerId + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
-        }
-        connectionPool.restoreConnection(connection);
-    }
-
-    public void updateCustomerFirstName(Customer customer, String firstName) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "update customers set firstName = '" + firstName + "' where customer id = '" + customer.getCustomerId() + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
-        }
-        connectionPool.restoreConnection(connection);
-    }
-
-    public void updateCustomerLastName(Customer customer, String lastName) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "update customers set lastName = '" + lastName + "' where customer id = '" + customer.getCustomerId() + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
-        }
-        connectionPool.restoreConnection(connection);
-    }
-
-    public void updateCustomerPassword(Customer customer, String password) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "update customers set password = '" + password + "' where customer id = '" + customer.getCustomerId() + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
-        }
-        connectionPool.restoreConnection(connection);
-    }
-
-    public int getCustomerIdByMail(String email) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-        String sql = "select * from customers where email = '" + email + "'";
-        int id = 0;
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                id = rs.getInt("customerId");
-            }
-        }
-        connectionPool.restoreConnection(connection);
-        return id;
     }
 
     public ArrayList<Customer> getAllCustomers() throws SQLException {
@@ -175,6 +89,65 @@ public class CustomersDBDAO implements CustomersDAO {
         connectionPool.restoreConnection(connection);
         return customer;
     }
+
+    public int getCustomerIdByMail(String email) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from customers where email = '" + email + "'";
+        int id = 0;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("customerId");
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return id;
+    }
+
+    public boolean isCustomerExist(String email, String password) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from customers where email ='" + email + "' and password = '" + password + "'";
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+        if (resultset.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isThisMailExist(String email) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from customers where email ='" + email + "'";
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+        }
+        connectionPool.restoreConnection(connection);
+        if (resultset.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void updateCustomer(int customerId, String email, String password) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "update customers set email = '" + email + "' and set password = '" + password + "' where customerId = '" + customerId + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        }
+        connectionPool.restoreConnection(connection);
+    }
+
+
+
+
+
+
 
 
 }

@@ -46,15 +46,37 @@ public class CouponsDBDAO implements CouponsDAO {
 
     }
 
-    public void updateCouponPrice(Coupon coupon, double price) throws SQLException {
+    @Override
+    public boolean addCouponPurchase(int customerId, int couponId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        Coupon coupon = getOneCoupon(couponId);
+        Customer customer = customersDBDAO.getCustomer(customerId);
+
+        if (coupon.getAmount() > 0 && customer != null && !isThisPurchaseExist(couponId, customerId)) {
+            String sql = "insert into customersandcoupons (customerId, couponId) values (?, ?)";
+            synchronized (lock) {
+
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setInt(1, coupon.getCompanyId());
+                preparedStatement.setString(2, coupon.getCategory());
+                preparedStatement.execute();
+                setAmount(-1, couponId);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void deleteAllCouponsByCompany(int companyId) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set price ='" + price + "' where couponId ='" + coupon.getCouponId() + "'";
-
+        String sql = "delete * coupons where companyId = '" + companyId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
         }
 
         connectionPool.restoreConnection(connection);
@@ -65,7 +87,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set deleted = " + 1 + " where id = '" + couponId + "'";
+        String sql = "delete * coupons where id = '" + couponId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -75,11 +97,46 @@ public class CouponsDBDAO implements CouponsDAO {
 
     }
 
+
+    @Override
+    public void deleteAllPurchasesForOneCoupon(int couponId) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+        String sql = "delete * from customerandcoupons where couponId = '" + couponId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+    }
+
+    public void deleteAllPurchasesForOneCustomer(int customerId) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+        String sql = "delete * from customerandcoupons where customerId = '" + customerId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+    }
+
+    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+        String sql = "delete from customerandcoupons where customerId = '" + customerId + "'  and couponId = '" + couponId + "'";
+
+        synchronized (lock) {
+            resultset = preparedStatement.executeQuery(sql);
+            connectionPool.restoreConnection(connection);
+        }
+    }
+
     public ArrayList<Coupon> getAllCoupons() throws SQLException {
         Connection connection = connectionPool.getConnection();
 
         ArrayList<Coupon> coupons = new ArrayList<>();
-        String sql = "select * from coupons where deleted = " + 0;
+        String sql = "select * from coupons";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -109,23 +166,189 @@ public class CouponsDBDAO implements CouponsDAO {
     }
 
     @Override
-    public void deleteAllCouponsByCompany(int companyId) throws SQLException {
+    public ArrayList<Coupon> getAllCouponsOfCompany(int companyId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where companyId = '" + companyId + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, companyId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    public List<Coupon> getAllCouponsByCustomer(int customerId) throws SQLException {//To be done!!!!!!
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set deleted = " + 1 + " where companyId = '" + companyId + "'";
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where customerId = '" + customerId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, customerId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    public int getCouponIdByCouponName(String couponName) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+        String sql = "select * from coupons where couponName = '" + couponName + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            resultset = preparedStatement.executeQuery();
+        }
+        int id = 0;
+        while (resultset.next()) {
+            id = resultset.getInt("couponId");
         }
 
         connectionPool.restoreConnection(connection);
+        return id;
 
+    }
+
+    @Override
+    public ArrayList<Coupon> getCouponsOfCompanyByCategory(int companyId, int categoryId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where companyId = '" + companyId + "' and categoryId = '" + categoryId + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, companyId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    @Override
+    public ArrayList<Coupon> getCouponsOfCompanyByMaxPrice(int companyId, double maxPrice) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where companyId = '" + companyId + "' and price <= '" + maxPrice + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, companyId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    @Override
+    public ArrayList<Coupon> getCouponsOfCustomerByCategory(int customerId, int categoryId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where customerId = '" + customerId + "' and categoryId = '" + categoryId + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, customerId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
+    }
+
+    @Override
+    public ArrayList<Coupon> getCouponsOfCustomerByMaxPrice(int customerId, double maxPrice) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        ArrayList<Coupon> coupons = new ArrayList<>();
+        String sql = "select * from coupons where customerId = '" + customerId + "' and price <= '" + maxPrice + "'";
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int couponId = resultSet.getInt("name");
+                String categoryName = resultSet.getString("email");
+                String couponName = resultSet.getString("password");
+                String description = resultSet.getString("description");
+                Date startDate = resultSet.getDate("startDate");
+                Date endDate = resultSet.getDate("endDate");
+                int amount = resultSet.getInt("amount");
+                double price = resultset.getDouble("price");
+                String image = resultSet.getString("image");
+                coupons.add(new Coupon(couponName, description, customerId,
+                        amount, price, categoryName, startDate, endDate, image));
+            }
+        }
+        connectionPool.restoreConnection(connection);
+        return coupons;
     }
 
     public Coupon getOneCoupon(int couponId) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
-        String sql = "select from coupons where id = '" + couponId + "'" + " and deleted = " + 0;
+        String sql = "select from coupons where id = '" + couponId + "'";
         Coupon coupon = null;
 
         synchronized (lock) {
@@ -152,149 +375,6 @@ public class CouponsDBDAO implements CouponsDAO {
         return coupon;
     }
 
-    @Override
-    public ArrayList<Coupon> getAllCouponsOfCompany(int companyId) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        ArrayList<Coupon> coupons = new ArrayList<>();
-        String sql = "select * from coupons where companyId = '" + companyId + "' and deleted = 0" ;
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            CompaniesDBDAO companiesDBDAO;
-            while (resultSet.next()) {
-                int couponId = resultSet.getInt("name");
-                String categoryName = resultSet.getString("email");
-                String couponName = resultSet.getString("password");
-                String description = resultSet.getString("description");
-                Date startDate = resultSet.getDate("startDate");
-                Date endDate = resultSet.getDate("endDate");
-                int amount = resultSet.getInt("amount");
-                double price = resultset.getDouble("price");
-                String image = resultSet.getString("image");
-
-                companiesDBDAO = new CompaniesDBDAO();
-                Company company = companiesDBDAO.getOneCompany(companyId);
-
-                coupons.add(new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image));
-            }
-        }
-        connectionPool.restoreConnection(connection);
-        return coupons;
-    }
-
-    @Override
-    public boolean addCouponPurchase(int customerId, int couponId) throws SQLException {
-        Coupon coupon = getOneCoupon(couponId);
-        Customer customer = customersDBDAO.getCustomer(customerId);
-
-        if (coupon.getAmount() > 0 && customer != null) {
-
-            if (!isCustomerAndCouponExist(customerId, couponId)) ;
-           addPurchase(customerId, couponId);
-            setAmountOfCoupons(coupon.getAmount() - 1, couponId);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void deleteCouponPurchase(int couponId, int customerId) throws SQLException {
-        System.out.println("no need for now");
-    }
-
-    @Override
-    public void deleteAllPurchasesForOneCoupon(int couponId) throws SQLException {
-
-            Connection connection = connectionPool.getConnection();
-            String sql = "update set deleted = " + 1 + " from customerandcoupons where couponId = '" + couponId + "'";
-
-            synchronized (lock) {
-                resultset = preparedStatement.executeQuery(sql);
-                connectionPool.restoreConnection(connection);
-            }
-    }
-
-    public void deleteAllPurchasesForOneCustomer(int customerId) throws SQLException {
-
-        Connection connection = connectionPool.getConnection();
-        String sql = "update set deleted = " + 1 + " from customerandcoupons where customerId = '" + customerId + "'";
-
-        synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-            connectionPool.restoreConnection(connection);
-        }
-    }
-
-    public void setAmountOfCoupons(int amount, int couponsId) throws SQLException {
-
-
-        Connection connection = connectionPool.getConnection();
-
-        String sql = " update coupons set amount = " + "' amount1 '" + " where companyId = '" + couponsId + "'";
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        }
-
-        connectionPool.restoreConnection(connection);
-
-    }
-
-
-    public void deletePurchased (int couponId, int customerId) throws SQLException {
-
-        Connection connection = connectionPool.getConnection();
-        String sql = "update set deleted = " + 1 + " from customerandcoupons where customeId = '" + customerId + "'  and couponId = '" + couponId + "'";
-
-        synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-            connectionPool.restoreConnection(connection);
-        }
-    }
-
-    public List<Coupon> getAllCouponsByCustomer(int customerId) {//To be done!!!!!!
-
-        return null;
-    }
-
-    @Override
-    public boolean isThisCouponExist(String couponName) throws SQLException {
-        Connection connection = connectionPool.getConnection();
-
-        String sql = "select * from coupons where couponName = '" + couponName + "'" + " and deleted = " + 0;
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            resultset = preparedStatement.executeQuery();
-        }
-        connectionPool.restoreConnection(connection);
-
-        if (resultset.next()) {
-            return true;
-        }
-        return false;
-    }
-
-
-    public int getCouponIdByCouponName(String couponName) throws SQLException {
-
-        Connection connection = connectionPool.getConnection();
-        String sql = "select * from coupons where couponName = '" + couponName + "'" + " and deleted = " + 0;
-        synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            resultset = preparedStatement.executeQuery();
-        }
-        int id = 0;
-        while (resultset.next()) {
-            id = resultset.getInt("couponId");
-        }
-
-        connectionPool.restoreConnection(connection);
-        return id;
-
-    }
-
     public boolean isExpired() throws SQLException {
         Connection connection = connectionPool.getConnection();
         Date date = new Date(System.currentTimeMillis());
@@ -315,24 +395,27 @@ public class CouponsDBDAO implements CouponsDAO {
         return resultSet.first();
     }
 
-    public void restoreAllDeletedCoupons() throws SQLException {
-
+    @Override
+    public boolean isThisCouponExist(String couponName) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set deleted = " + 0 + " where deleted = " + 1;
+        String sql = "select * from coupons where couponName = '" + couponName + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
+            resultset = preparedStatement.executeQuery();
         }
-
         connectionPool.restoreConnection(connection);
+
+        if (resultset.next()) {
+            return true;
+        }
+        return false;
     }
 
-    // below is the function of customerAndCoupon table.
-
-    public boolean isCustomerAndCouponExist(int customerId, int couponsId) throws SQLException {
+    @Override
+    public boolean isThisPurchaseExist(int couponId, int customerId) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "select * from customerandcoupons where customerId ='" + customerId + "' and couponId = '" + couponsId + "'";
+        String sql = "select * from customerandcoupons where customerId ='" + customerId + "' and couponId = '" + couponId + "'";
 
         synchronized (lock) {
             resultset = preparedStatement.executeQuery(sql);
@@ -342,25 +425,71 @@ public class CouponsDBDAO implements CouponsDAO {
         return resultset.first();
     }
 
-    public void addPurchase(int customerId, int couponId) throws SQLException {
+    public void setAmount(int add, int couponsId) throws SQLException {
+
+
         Connection connection = connectionPool.getConnection();
-        String sql = "insert into customerandcoupons (customerId, companyId) values ('" +
-                customerId + "', '" + couponId + "')";
+
+        String sql = "select from coupons where companyId = '" + couponsId + "'";
 
         synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-            connectionPool.restoreConnection(connection);
+            preparedStatement = connection.prepareStatement(sql);
+            resultset = preparedStatement.getResultSet();
         }
+        int oldAmount = 0;
+        while (resultset.next()) {
+            oldAmount = resultset.findColumn("amount");
+        }
+        int amount = oldAmount + add;
+        sql = " update coupons set amount = '" + amount + "' where companyId = '" + couponsId + "'";
+        synchronized (lock) {
+            preparedStatement = connection.prepareStatement(sql);
+        }
+
+        connectionPool.restoreConnection(connection);
+
     }
 
-    public void deletePurchasedCouponFromCustomerAndCoupon(int couponId, int customerId) throws SQLException {
+    @Override
+    public void updateCouponDescription(Coupon coupon, String description) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "delete from customerandcoupons where customeId = '" + customerId + "'  and couponId = '" + couponId + "'";
+
+        String sql = "update coupons set description ='" + description + "' where couponId ='" + coupon.getCouponId() + "'";
 
         synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
-            connectionPool.restoreConnection(connection);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
         }
+
+        connectionPool.restoreConnection(connection);
+    }
+
+    @Override
+    public void updateCouponEndDate(Coupon coupon, Date endDate) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "update coupons set endDate ='" + endDate + "' where couponId ='" + coupon.getCouponId() + "'";
+
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        }
+
+        connectionPool.restoreConnection(connection);
+    }
+
+    public void updateCouponPrice(Coupon coupon, double price) throws SQLException {
+
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "update coupons set price ='" + price + "' where couponId ='" + coupon.getCouponId() + "'";
+
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+        }
+
+        connectionPool.restoreConnection(connection);
 
     }
 

@@ -12,7 +12,7 @@ class CompaniesDBDAOTest {
     @Test
     void isCompanyExist() throws SQLException {
 
-        boolean isExist = companiesDBDAO.isCompanyExist("rr", "fef");
+        boolean isExist = companiesDBDAO.loginCheck("rr", "fef");
         assertTrue(isExist);
     }
 

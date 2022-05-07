@@ -48,7 +48,7 @@ public class CustomerFacade extends MainFacade{
         return couponsDBDAO.getAllCouponsByCustomer(this.customerId);
     }
 
-    public List<Coupon> getCustomersCouponsOfCategory(String category) throws SystemException {
+    public List<Coupon> getCustomersCouponsOfCategory(String category) throws SystemException, SQLException {
         List<Coupon> couponsOfCustomer = new ArrayList<>();
         couponsOfCustomer = getAllCustomersCoupons();
         List<Coupon> couponOfCategory = new ArrayList<>();
@@ -63,7 +63,7 @@ public class CustomerFacade extends MainFacade{
         return couponOfCategory;
     }
 
-    public List<Coupon> getCustomersCouponsByMaxPrice(int maxPrice) throws SystemException {
+    public List<Coupon> getCustomersCouponsByMaxPrice(int maxPrice) throws SystemException, SQLException {
         List<Coupon> couponsOfCustomer = new ArrayList<>();
         couponsOfCustomer = getAllCustomersCoupons();
         List<Coupon> couponsByMaxPrice = new ArrayList<>();

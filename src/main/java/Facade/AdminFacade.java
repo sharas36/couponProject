@@ -16,11 +16,11 @@ public class AdminFacade extends MainFacade {
     }
 
     @Override
-    public Boolean login(String email, String password) {
-        if (!email.equals("admin@admin.com")) {
-            new SystemException("This email is wrong");
-        } else if (!password.equals("admin")) {
-            new SystemException("This password is wrong");
+    public Boolean login(String email, String password) throws SystemException {
+        if (!(email.equals("admin@admin.com"))) {
+            throw new SystemException("This email is wrong");
+        } else if (!(password.equals("admin"))) {
+            throw new SystemException("This password is wrong");
         }
         return true;
     }

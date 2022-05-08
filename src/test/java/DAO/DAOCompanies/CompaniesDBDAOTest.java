@@ -9,31 +9,29 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CompaniesDBDAOTest {
     CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
-    Company company = new Company("","");
-
-
+    Company company = new Company("", "");
 
 
     @Test
     void addCompany() throws SQLException {
         assertDoesNotThrow(() -> {
-            companiesDBDAO.addCompany(new Company("770", "770", "770"));
+            companiesDBDAO.addCompany(new Company("checkName", "checkEmail", "checkPassword"));
         });
 
-        assertThrows(NullPointerException.class, () -> {
-            companiesDBDAO.addCompany(null);
-        });
+        Company company = companiesDBDAO.getOneCompany(companiesDBDAO.getCompanyId("checkEmail"));
+        assertNotNull(company);
+
 
     }
 
     @Test
     void deleteCompany() throws SQLException {
-        companiesDBDAO.deleteCompany(1);
-
         assertDoesNotThrow(() -> {
-            companiesDBDAO.deleteCompany(1);
+            companiesDBDAO.deleteCompany(3);
         });
 
+        Company company = companiesDBDAO.getOneCompany(3);
+        assertNull(company);
     }
 
     @Test
@@ -73,7 +71,6 @@ class CompaniesDBDAOTest {
     void loginCheck() throws SQLException {
         assertTrue(companiesDBDAO.loginCheck("770", "770"));
         assertFalse(companiesDBDAO.loginCheck("emailNotExistForExample", "nameNotExistForExample"));
-
     }
 
     @Test

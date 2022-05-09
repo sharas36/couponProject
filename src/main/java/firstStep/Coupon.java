@@ -18,7 +18,7 @@ public class Coupon {
     private int amount;
     private int howMuchRemain;
     private double price;
-    private String category;
+    private int categoryId;
     private java.sql.Date startDate;
     private java.sql.Date endDate;
     private String imageURL;
@@ -26,13 +26,13 @@ public class Coupon {
 
 
     public Coupon(String couponName, String description, int companyId, int amount, double price,
-                 String category, Date endDate, String imageURL) {
+                 int categoryId, Date endDate, String imageURL) {
         this.couponName = couponName;
         this.description = description;
         this.companyId = companyId;
         this.amount = amount;
         this.price = price;
-        this.category = category;
+        this.categoryId = categoryId;
         this.endDate = endDate;
         this.imageURL = imageURL;
          init();
@@ -40,13 +40,13 @@ public class Coupon {
     }
 
     public Coupon(String couponName, String description, int companyId,
-                  int amount, double price, String category, Date startDate, Date endDate, String imageURL) {
+                  int amount, double price, int categoryId, Date startDate, Date endDate, String imageURL) {
         this.couponName = couponName;
         this.description = description;
         this.companyId = companyId;
         this.amount = amount;
         this.price = price;
-        this.category = category;
+        this.categoryId = categoryId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.imageURL = imageURL;

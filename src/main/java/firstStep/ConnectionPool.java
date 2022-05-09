@@ -76,4 +76,7 @@ public class ConnectionPool {
             connection.close();
         }
     }
+    public int getConnectionPoolSize(){
+        return connectionPool.size();
+    }
 }

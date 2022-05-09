@@ -48,12 +48,12 @@ public class CustomerFacade extends MainFacade{
         return couponsDBDAO.getAllCouponsByCustomer(this.customerId);
     }
 
-    public List<Coupon> getCustomersCouponsOfCategory(String category) throws SystemException, SQLException {
+    public List<Coupon> getCustomersCouponsOfCategory(int categoryId) throws SystemException, SQLException {
         List<Coupon> couponsOfCustomer = new ArrayList<>();
         couponsOfCustomer = getAllCustomersCoupons();
         List<Coupon> couponOfCategory = new ArrayList<>();
         for(Coupon coupon : couponsOfCustomer){
-            if(coupon.getCategory().equals(category)){
+            if(coupon.getCategoryId() == categoryId){
                 couponOfCategory.add(coupon);
             }
         }

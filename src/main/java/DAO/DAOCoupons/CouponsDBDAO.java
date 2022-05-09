@@ -23,27 +23,25 @@ public class CouponsDBDAO implements CouponsDAO {
 
     public void addCoupon(Coupon coupon) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "insert into coupons (companyId, categoryName, " + // here we change to categoryName -- have to change it in the sql as well.
+        String sql = "insert into coupons (companyId, categoryId, " + // here we change to categoryName -- have to change it in the sql as well.
                 "couponName, description, startDate ,endDate, amount, price, image) values (?,?,?,?,?,?,?,?,?)";
+
+
+        preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, coupon.getCompanyId());
+        preparedStatement.setInt(2, coupon.getCategoryId());
+        preparedStatement.setString(3, coupon.getCouponName());
+        preparedStatement.setString(4, coupon.getDescription());
+        preparedStatement.setDate(5, coupon.getStartDate());
+        preparedStatement.setDate(6, coupon.getEndDate());
+        preparedStatement.setInt(7, coupon.getAmount());
+        preparedStatement.setDouble(8, coupon.getPrice());
+        preparedStatement.setString(9, coupon.getImageURL());
         synchronized (lock) {
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, coupon.getCompanyId());
-            preparedStatement.setString(2, coupon.getCategory());
-            preparedStatement.setString(3, coupon.getCouponName());
-            preparedStatement.setString(4, coupon.getDescription());
-            preparedStatement.setDate(5, coupon.getStartDate());
-            preparedStatement.setDate(6, coupon.getEndDate());
-            preparedStatement.setInt(7, coupon.getAmount());
-            preparedStatement.setDouble(8, coupon.getPrice());
-            preparedStatement.setString(9, coupon.getImageURL());
-
             preparedStatement.execute();
             coupon.setCouponId(this.getCouponIdByCouponName(coupon.getCouponName()));
-            coupon.setCouponId(getCouponIdByCouponName(coupon.getCouponName()));
         }
         connectionPool.restoreConnection(connection);
-
     }
 
     @Override
@@ -154,7 +152,7 @@ public class CouponsDBDAO implements CouponsDAO {
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("couponId");
                 int companyId = resultSet.getInt("companyId");
-                String categoryName = resultSet.getString("categoryName");
+                int categoryId = resultSet.getInt("categoryName");
                 String couponName = resultSet.getString("couponName");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -167,7 +165,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 Company company = companiesDBDAO.getOneCompany(companyId);
 
                 coupons.add(new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -186,7 +184,7 @@ public class CouponsDBDAO implements CouponsDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("couponId");
-                String categoryName = resultSet.getString("categoryName");
+                int categoryId = resultSet.getInt("categoryName");
                 String couponName = resultSet.getString("couponName");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -195,7 +193,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 double price = resultSet.getDouble("price");
                 String image = resultSet.getString("image");
                 coupons.add(new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -249,7 +247,6 @@ public class CouponsDBDAO implements CouponsDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("name");
-                String categoryName = resultSet.getString("email");
                 String couponName = resultSet.getString("password");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -258,7 +255,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 double price = resultset.getDouble("price");
                 String image = resultSet.getString("image");
                 coupons.add(new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -276,7 +273,7 @@ public class CouponsDBDAO implements CouponsDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("name");
-                String categoryName = resultSet.getString("email");
+                int categoryId = resultSet.getInt("email");
                 String couponName = resultSet.getString("password");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -285,7 +282,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 double price = resultset.getDouble("price");
                 String image = resultSet.getString("image");
                 coupons.add(new Coupon(couponName, description, companyId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -303,7 +300,6 @@ public class CouponsDBDAO implements CouponsDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("name");
-                String categoryName = resultSet.getString("email");
                 String couponName = resultSet.getString("password");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -312,7 +308,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 double price = resultset.getDouble("price");
                 String image = resultSet.getString("image");
                 coupons.add(new Coupon(couponName, description, customerId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -330,7 +326,7 @@ public class CouponsDBDAO implements CouponsDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int couponId = resultSet.getInt("name");
-                String categoryName = resultSet.getString("email");
+                int categoryId = resultSet.getInt("categoryId");
                 String couponName = resultSet.getString("password");
                 String description = resultSet.getString("description");
                 Date startDate = resultSet.getDate("startDate");
@@ -339,7 +335,7 @@ public class CouponsDBDAO implements CouponsDAO {
                 double price = resultset.getDouble("price");
                 String image = resultSet.getString("image");
                 coupons.add(new Coupon(couponName, description, customerId,
-                        amount, price, categoryName, startDate, endDate, image));
+                        amount, price, categoryId, startDate, endDate, image));
             }
         }
         connectionPool.restoreConnection(connection);
@@ -360,7 +356,7 @@ public class CouponsDBDAO implements CouponsDAO {
         while (this.resultset.next()) {
             int idCoupon = this.resultset.getInt("couponId");
             int companyId = this.resultset.getInt("companyId");
-            String categoryName = this.resultset.getString("categoryName");
+            int categoryId = this.resultset.getInt("categoryId");
             String couponName = this.resultset.getString("couponName");
             String description = this.resultset.getString("description");
             Date startDate = this.resultset.getDate("startDate");
@@ -369,7 +365,7 @@ public class CouponsDBDAO implements CouponsDAO {
             double price = this.resultset.getDouble("price");
             String image = this.resultset.getString("image");
             coupon = new Coupon(couponName, description, companyId,
-                    amount, price, categoryName, startDate, endDate, image);
+                    amount, price, categoryId, startDate, endDate, image);
             coupon.setCouponId(getCouponIdByCouponName(this.resultset.getString("couponName")));
             return coupon;
 

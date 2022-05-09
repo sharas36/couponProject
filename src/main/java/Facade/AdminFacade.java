@@ -7,14 +7,17 @@ import Users.Company;
 import Users.Customer;
 import firstStep.Coupon;
 import firstStep.SystemException;
+import lombok.Data;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 public class AdminFacade extends MainFacade {
     public AdminFacade(CompaniesDBDAO companiesDBDAO, CouponsDBDAO couponsDBDAO, CustomersDBDAO customersDBDAO) {
         super(companiesDBDAO, couponsDBDAO, customersDBDAO);
     }
+
 
     @Override
     public Boolean login(String email, String password) throws SystemException {

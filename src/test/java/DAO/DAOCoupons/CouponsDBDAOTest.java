@@ -8,14 +8,16 @@ import javax.crypto.spec.PSource;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponsDBDAOTest {
     CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+    Random random = new Random();
     Coupon coupon = new Coupon
-            ("nameForSql", "descripExample", 49, 5,
-                    5.5, "categoryExample", new Date(System.currentTimeMillis()), "exampleImageUrL");
+            ("nameForSql", "descripExample", random.nextInt(1000), 5,
+                    5.5, 1, new Date(System.currentTimeMillis()), "exampleImageUrL");
 
 
     @Test
@@ -29,6 +31,7 @@ class CouponsDBDAOTest {
             couponsDBDAO.addCoupon(null);
         });
 
+        }
     }
 
 

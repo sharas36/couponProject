@@ -4,9 +4,10 @@ import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import firstStep.SystemException;
+import lombok.Data;
 
 import java.sql.SQLException;
-
+@Data
 public abstract  class MainFacade {
 
     protected CompaniesDBDAO companiesDBDAO;

@@ -11,6 +11,7 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
+import firstStep.Coupon;
 import firstStep.SystemException;
 
 import java.sql.Date;
@@ -37,10 +38,15 @@ public class Main {
 //        }
         Random random = new Random();
         AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
+        String str = "2023-12-31";
+        Date date = Date.valueOf(str);
+        CouponsDBDAO couponsDBDAO = adminFacade.getCouponsDBDAO();
         for (int i = 0; i < 100; i++) {
-            Customer customer = new Customer("customer", "" + i,i + "@gmail.com" , (random.nextInt(89999999) + 10000000) + "a");
-            adminFacade.addCustomer(customer);
+            Coupon coupon = new Coupon("coupon" + i, i + " ", random.nextInt(100) + 128, (random.nextInt(1000) + 1), (double) (random.nextInt(1000) + 10),
+                    random.nextInt(100), date, "");
+            couponsDBDAO.addCoupon(coupon);
         }
+
     }
 
 

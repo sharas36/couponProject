@@ -66,4 +66,8 @@ public class Coupon {
     public void setDeleted(){
         this.deleted = !this.deleted;
     }
+
+    public void printSomething(){
+        System.out.println("it is work!");
+    }
 }

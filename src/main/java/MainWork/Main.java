@@ -14,8 +14,10 @@ import Users.User;
 import firstStep.Coupon;
 import firstStep.SystemException;
 
+import javax.swing.plaf.IconUIResource;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -27,26 +29,15 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-//        MainFacade mainFacade = userCheckScreen();
-//        User user = login(mainFacade);
-//        if (user instanceof Admin) {
-//            adminMenu((AdminFacade) mainFacade);
-//        } else if (user instanceof Company) {
-//            companyMenu((CompanyFacade) mainFacade);
-//        } else {
-//            customerMenu((CustomerFacade) mainFacade);
-//        }
-        Random random = new Random();
-        AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
-        String str = "2023-12-31";
-        Date date = Date.valueOf(str);
-        CouponsDBDAO couponsDBDAO = adminFacade.getCouponsDBDAO();
-        for (int i = 0; i < 100; i++) {
-            Coupon coupon = new Coupon("coupon" + i, i + " ", random.nextInt(100) + 128, (random.nextInt(1000) + 1), (double) (random.nextInt(1000) + 10),
-                    random.nextInt(100), date, "");
-            couponsDBDAO.addCoupon(coupon);
+        MainFacade mainFacade = userCheckScreen();
+        User user = login(mainFacade);
+        if (user instanceof Admin) {
+            adminMenu((AdminFacade) mainFacade);
+        } else if (user instanceof Company) {
+            companyMenu((CompanyFacade) mainFacade);
+        } else {
+            customerMenu((CustomerFacade) mainFacade);
         }
-
     }
 
 

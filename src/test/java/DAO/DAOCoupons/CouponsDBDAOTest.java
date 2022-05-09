@@ -1,23 +1,25 @@
 package DAO.DAOCoupons;
 
 import Users.Company;
+import firstStep.ConnectionPool;
 import firstStep.Coupon;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.spec.PSource;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponsDBDAOTest {
     CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-    Random random = new Random();
     Coupon coupon = new Coupon
-            ("nameForSql", "descripExample", random.nextInt(1000), 5,
-                    5.5, 1, new Date(System.currentTimeMillis()), "exampleImageUrL");
+            ("nameForSql", "descripExample", 49, 5,
+                    5.5, "categoryExample", new Date(System.currentTimeMillis()), "exampleImageUrL");
 
 
     @Test
@@ -31,7 +33,6 @@ class CouponsDBDAOTest {
             couponsDBDAO.addCoupon(null);
         });
 
-        }
     }
 
 
@@ -127,23 +128,48 @@ class CouponsDBDAOTest {
     }
 
     @Test
-    void getCouponsOfCompanyByCategory() {
+    void getCouponsOfCompanyByCategory() throws SQLException {
+        assertTrue(couponsDBDAO.getCouponsOfCompanyByCategory(99, 1).size() > 0);
+
+        for (Coupon coupon :
+                couponsDBDAO.getCouponsOfCompanyByCategory(99, 1)
+        ) {
+            System.out.println(coupon.toString());
+        }
     }
 
     @Test
-    void getCouponsOfCompanyByMaxPrice() {
+    void getCouponsOfCompanyByMaxPrice() throws SQLException {
+        couponsDBDAO.getCouponsOfCompanyByMaxPrice(49, 4.5);
+        assertTrue(couponsDBDAO.getCouponsOfCompanyByMaxPrice(49, 4.5).size() > 0);
+
+        for (Coupon coupon :
+                couponsDBDAO.getCouponsOfCompanyByMaxPrice(49, 4.5)) {
+            System.out.println(coupon.toString());
+        }
     }
 
     @Test
-    void getCouponsOfCustomerByCategory() {
+    void getCouponsOfCustomerByCategory() throws SQLException {
+        ArrayList<Coupon> coupons = couponsDBDAO.getCouponsOfCustomerByCategory(1, 0);
+        assertTrue(coupons.size() >= 1);
+
+
+        for (int i = 0; i < coupons.size(); i++) {
+            System.out.println(coupons.get(i));
+        }
+
     }
+
 
     @Test
     void getCouponsOfCustomerByMaxPrice() {
     }
 
     @Test
-    void getOneCoupon() {
+    void getOneCoupon() throws SQLException {
+        assertNotNull(couponsDBDAO.getOneCoupon(22));
+        System.out.println(couponsDBDAO.getOneCoupon(22).toString());
     }
 
     @Test
@@ -155,22 +181,45 @@ class CouponsDBDAOTest {
     }
 
     @Test
-    void isThisPurchaseExist() {
+    void isThisPurchaseExist() throws SQLException {
+        assertTrue(couponsDBDAO.isThisPurchaseExist(1, 89));
     }
 
     @Test
-    void setAmount() {
+    void setAmount() throws SQLException {
+        Coupon coupon = couponsDBDAO.getOneCoupon(24);
+        int i = coupon.getAmount();
+        System.out.println(i);
+        couponsDBDAO.setAmount(5, 24);
+        Coupon coupon2 = couponsDBDAO.getOneCoupon(24);
+        int x = coupon2.getAmount();
+        assertTrue(x == 10);
+
+
     }
 
     @Test
-    void updateCouponDescription() {
+    void updateCouponDescription() throws SQLException {
+        Coupon coupon = couponsDBDAO.getOneCoupon(23);
+        String prevText = coupon.getDescription();
+        couponsDBDAO.updateCouponDescription(23, "cvdfbgrr");
+        Coupon coupon2 = couponsDBDAO.getOneCoupon(23);
+        String nextText = coupon2.getDescription();
+        System.out.println(prevText + " " + nextText);
+
     }
 
     @Test
-    void updateCouponEndDate() {
+    void updateCouponEndDate() throws SQLException {
+        Coupon coupon = couponsDBDAO.getOneCoupon(23);
+
+        couponsDBDAO.updateCouponEndDate(23, new Date(System.currentTimeMillis()));
     }
 
     @Test
     void updateCouponPrice() {
+        ConnectionPool connectionPool = ConnectionPool.getInstanse();
+
     }
 }
+

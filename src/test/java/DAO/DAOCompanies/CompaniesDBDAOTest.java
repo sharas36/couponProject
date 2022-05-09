@@ -1,6 +1,7 @@
 package DAO.DAOCompanies;
 
 import Users.Company;
+import firstStep.Coupon;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -37,6 +38,10 @@ class CompaniesDBDAOTest {
     @Test
     void getAllCompanies() throws SQLException {
         assertNotNull(companiesDBDAO.getAllCompanies());
+
+        for (Company company : companiesDBDAO.getAllCompanies()) {
+            System.out.println(company.toString());
+        }
     }
 
     @Test
@@ -52,6 +57,8 @@ class CompaniesDBDAOTest {
     @Test
     void getOneCompany() throws SQLException {
         assertNotNull(companiesDBDAO.getOneCompany(2));
+
+        System.out.println(companiesDBDAO.getOneCompany(2).toString());
     }
 
     @Test
@@ -74,9 +81,19 @@ class CompaniesDBDAOTest {
     }
 
     @Test
-    void updateCompany() {
+    void updateCompany() throws SQLException {
+        String email = "emailChangeAt:5/8/22";
+        String password = "emailChangeAt:5/8/22";
+        int id = 2;
+
         assertDoesNotThrow(() -> {
-            companiesDBDAO.updateCompany(companiesDBDAO.getOneCompany(2), "changeName", "changePassword");
+            companiesDBDAO.updateCompany(companiesDBDAO.getOneCompany(id), email, password);
         });
+
+
+        assertTrue(email.equals(companiesDBDAO.getOneCompany(id).getEmail()));
+        assertTrue(password.equals(companiesDBDAO.getOneCompany(id).getPassword()));
+
+
     }
 }

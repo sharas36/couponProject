@@ -43,7 +43,7 @@ public class CompanyFacade extends MainFacade {
         if (!couponsDBDAO.isThisCouponExist(coupon.getCouponName())) {
             throw new SystemException("This coupon isnt exist");
         }
-        couponsDBDAO.updateCouponPrice(coupon, price);
+        couponsDBDAO.updateCouponPrice(coupon.getCouponId(), price);
     }
 
     public void deleteCoupon(int couponId) throws SQLException, SystemException {

@@ -35,7 +35,7 @@ public interface CouponsDAO {
 
     public ArrayList<Coupon> getCouponsOfCompanyByMaxPrice(int companyId, double maxPrice) throws SQLException;
 
-    public ArrayList<Coupon> getCouponsOfCustomerByCategory(int customerId, int categoryId) throws SQLException;
+    public ArrayList<Coupon> getCouponsOfCustomerByCategory(int customerId, int categoryId) throws SQLException, InterruptedException;
 
     public ArrayList<Coupon> getCouponsOfCustomerByMaxPrice(int customerId, double maxPrice) throws SQLException;
 
@@ -49,10 +49,10 @@ public interface CouponsDAO {
 
     public void setAmount(int add, int couponsId) throws SQLException;
 
-    public void updateCouponDescription(Coupon coupon, String description) throws SQLException;
+    public void updateCouponDescription(int couponId, String description) throws SQLException;
 
-    public void updateCouponEndDate(Coupon coupon, Date endDate) throws SQLException;
+    public void updateCouponEndDate(int couponId, Date endDate) throws SQLException;
 
-    public void updateCouponPrice(Coupon coupon, double price) throws SQLException;
+    public void updateCouponPrice(int couponId, double price) throws SQLException;
 
 }

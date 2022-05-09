@@ -11,10 +11,13 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
+import firstStep.Coupon;
 import firstStep.SystemException;
 
+import javax.swing.plaf.IconUIResource;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
@@ -24,15 +27,21 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException, SystemException {
+//
+//        MainFacade mainFacade = userCheckScreen();
+//        User user = login(mainFacade);
+//        if (user instanceof Admin) {
+//            adminMenu((AdminFacade) mainFacade);
+//        } else if (user instanceof Company) {
+//            companyMenu((CompanyFacade) mainFacade);
+//        } else {
+//            customerMenu((CustomerFacade) mainFacade);
+//        }
 
-        MainFacade mainFacade = userCheckScreen();
-        User user = login(mainFacade);
-        if (user instanceof Admin) {
-            adminMenu((AdminFacade) mainFacade);
-        } else if (user instanceof Company) {
-            companyMenu((CompanyFacade) mainFacade);
-        } else {
-            customerMenu((CustomerFacade) mainFacade);
+        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+        ArrayList<Coupon> arrayList = couponsDBDAO.getCouponsOfCustomerByCategory(1, 0);
+        for (Coupon coupon : arrayList) {
+            System.out.println(coupon.toString());
         }
     }
 

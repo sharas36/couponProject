@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -25,14 +26,20 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-        MainFacade mainFacade = userCheckScreen();
-        User user = login(mainFacade);
-        if (user instanceof Admin) {
-            adminMenu((AdminFacade) mainFacade);
-        } else if (user instanceof Company) {
-            companyMenu((CompanyFacade) mainFacade);
-        } else {
-            customerMenu((CustomerFacade) mainFacade);
+//        MainFacade mainFacade = userCheckScreen();
+//        User user = login(mainFacade);
+//        if (user instanceof Admin) {
+//            adminMenu((AdminFacade) mainFacade);
+//        } else if (user instanceof Company) {
+//            companyMenu((CompanyFacade) mainFacade);
+//        } else {
+//            customerMenu((CustomerFacade) mainFacade);
+//        }
+        Random random = new Random();
+        AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
+        for (int i = 0; i < 100; i++) {
+            Customer customer = new Customer("customer", "" + i,i + "@gmail.com" , (random.nextInt(89999999) + 10000000) + "a");
+            adminFacade.addCustomer(customer);
         }
     }
 

@@ -25,7 +25,6 @@ public class CustomersDBDAO implements CustomersDAO {
             preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.execute();
             customer.setCustomerId(getCustomerIdByMail(customer.getEmail()));
-            System.out.println(customer.getFirstName() + " is added...");
         }
         connectionPool.restoreConnection(connection);
     }
@@ -123,7 +122,8 @@ public class CustomersDBDAO implements CustomersDAO {
         Connection connection = connectionPool.getConnection();
         String sql = "select * from customers where email ='" + email + "'";
         synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
+            preparedStatement = connection.prepareStatement(sql);
+            resultset = preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
         if (resultset.next()) {

@@ -110,7 +110,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
             this.resultset = this.preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
-        if (this.resultset.next()) {
+        while (this.resultset.next()) {
             return true;
         }
         return false;

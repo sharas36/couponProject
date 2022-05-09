@@ -5,6 +5,7 @@ import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Company;
 import Users.Customer;
+import firstStep.Coupon;
 import firstStep.SystemException;
 
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ public class AdminFacade extends MainFacade {
 
     public void addCompany(Company company) throws SQLException, SystemException {
 
-        if (this.companiesDBDAO.loginCheck(company.getEmail(), company.getPassword())) {
+        if (this.companiesDBDAO.isThisMailExist(company.getEmail())) {
             throw new SystemException("This company already exist");
         }
 
@@ -40,7 +41,7 @@ public class AdminFacade extends MainFacade {
 
     // wait for hibernate (merge function).
     public void updateCompany(Company company, String email, String password) throws SystemException, SQLException {
-        if (!this.companiesDBDAO.loginCheck(company.getEmail(), company.getPassword())) {
+        if (!this.companiesDBDAO.isThisMailExist(company.getEmail())) {
             throw new SystemException("This company isnt exist");
         }
         this.companiesDBDAO.updateCompany(company, email, password);
@@ -50,8 +51,14 @@ public class AdminFacade extends MainFacade {
         if (companiesDBDAO.getOneCompany(companyId) == null) {
             throw new SystemException("This company isnt exist");
         }
+        ArrayList<Coupon> coupons = couponsDBDAO.getAllCouponsOfCompany(companyId);
         this.companiesDBDAO.deleteCompany(companyId);
         this.couponsDBDAO.deleteAllCouponsByCompany(companyId);
+        for (Coupon coupon: coupons) {
+            this.couponsDBDAO.deleteAllPurchasesForOneCoupon(coupon.getCouponId());
+        }
+
+
     }
 
     public ArrayList<Company> getAllCompanies() throws SQLException, SystemException {

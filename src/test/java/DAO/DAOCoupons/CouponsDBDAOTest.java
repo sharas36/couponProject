@@ -1,6 +1,7 @@
 package DAO.DAOCoupons;
 
 import Users.Company;
+import firstStep.ConnectionPool;
 import firstStep.Coupon;
 import org.junit.jupiter.api.Test;
 
@@ -217,6 +218,7 @@ class CouponsDBDAOTest {
 
     @Test
     void updateCouponPrice() {
+        ConnectionPool connectionPool = ConnectionPool.getInstanse();
 
     }
 }

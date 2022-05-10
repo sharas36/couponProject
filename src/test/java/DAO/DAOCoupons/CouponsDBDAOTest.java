@@ -164,16 +164,17 @@ class CouponsDBDAOTest {
 
     @Test
     void getCouponsOfCustomerByMaxPrice() throws SQLException {
-        couponsDBDAO.getCouponsOfCustomerByMaxPrice(1,6);
-        for (Coupon coupon:  couponsDBDAO.getCouponsOfCustomerByMaxPrice(1,6)){
+        for (Coupon coupon : couponsDBDAO.getCouponsOfCustomerByMaxPrice(1, 4.4)) {
             System.out.println(coupon.toString());
         }
     }
 
     @Test
     void getOneCoupon() throws SQLException {
-        assertNotNull(couponsDBDAO.getOneCoupon(22));
-        System.out.println(couponsDBDAO.getOneCoupon(25).getEndDate().getTime() < System.currentTimeMillis());
+//        assertNotNull(couponsDBDAO.getOneCoupon(22));
+//        System.out.println(couponsDBDAO.getOneCoupon(25).getEndDate().getTime() < System.currentTimeMillis());
+        System.out.println(couponsDBDAO.getOneCoupon(27).toString());
+
 
     }
 

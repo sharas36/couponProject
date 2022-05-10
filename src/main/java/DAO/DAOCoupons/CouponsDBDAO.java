@@ -10,6 +10,7 @@ import firstStep.Coupon;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class CouponsDBDAO implements CouponsDAO {
@@ -204,17 +205,19 @@ public class CouponsDBDAO implements CouponsDAO {
     public List<Coupon> getAllCouponsByCustomer(int customerId) throws SQLException {//To be done!!!!!!
 
         Connection connection = connectionPool.getConnection();
-        ArrayList<Coupon> coupons = new ArrayList<>();
+        ResultSet resultSet;
+        List<Coupon> coupons = new ArrayList<>();
         String sql = "select * from customerandcoupons where customerId = '" + customerId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            this.resultset = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
         }
         connectionPool.restoreConnection(connection);
-        while (this.resultset.next()) {
-            coupons.add(getOneCoupon(this.resultset.getInt("couponId")));
-        }
+        int i = 0;
 
+        while (resultSet.next()) {
+            coupons.add(getOneCoupon(resultSet.getInt("couponId")));
+        }
         return coupons;
     }
 
@@ -344,7 +347,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         }
 
-        return coupon;
+        return null;
     }
 
     public boolean isExpired() throws SQLException {

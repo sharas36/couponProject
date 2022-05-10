@@ -34,11 +34,15 @@ public class Main {
         CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
         List<Coupon> couponArrayList = couponsDBDAO.getAllCouponsByCustomer(1);
 
-        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
-        for (Coupon coupon : sortedListCoupon) {
-            System.out.print(coupon.getPrice() + " " + i++);
-            System.out.println();
-        }
+
+
+//        System.out.println(couponArrayList.size());
+//        System.out.println(couponArrayList.get(0));
+//        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
+//        for (Coupon coupon : sortedListCoupon) {
+//            System.out.print(coupon.getPrice() + " " + i++);
+//            System.out.println();
+//        }
 
 //        MainFacade mainFacade = userCheckScreen();
 //        User user = login(mainFacade);

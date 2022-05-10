@@ -27,28 +27,15 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-
-        ConnectionPool connectionPool = ConnectionPool.getInstanse();
-
-        for (int i = 0; i < 5; i++) {
-            System.out.println("i have " + connectionPool.getConnectionPoolSize() + " connection");
-            Connection connection = connectionPool.getConnection();
-            connectionPool.restoreConnection(connection);
-            System.out.println("i have " + connectionPool.getConnectionPoolSize() + " connection");
-
-
+        MainFacade mainFacade = userCheckScreen();
+        User user = login(mainFacade);
+        if (user instanceof Admin) {
+            adminMenu((AdminFacade) mainFacade);
+        } else if (user instanceof Company) {
+            companyMenu((CompanyFacade) mainFacade);
+        } else {
+            customerMenu((CustomerFacade) mainFacade);
         }
-
-
-//        MainFacade mainFacade = userCheckScreen();
-//        User user = login(mainFacade);
-//        if (user instanceof Admin) {
-//            adminMenu((AdminFacade) mainFacade);
-//        } else if (user instanceof Company) {
-//            companyMenu((CompanyFacade) mainFacade);
-//        } else {
-//            customerMenu((CustomerFacade) mainFacade);
-//        }
     }
 
 

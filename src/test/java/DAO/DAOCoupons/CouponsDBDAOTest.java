@@ -193,10 +193,11 @@ class CouponsDBDAOTest {
         Coupon coupon = couponsDBDAO.getOneCoupon(24);
         int i = coupon.getAmount();
         System.out.println(i);
-        couponsDBDAO.setAmount(5, 24);
+        int number = 5;
+        couponsDBDAO.setAmount(number, 24);
         Coupon coupon2 = couponsDBDAO.getOneCoupon(24);
         int x = coupon2.getAmount();
-        assertTrue(x == 10);
+        assertTrue(x - i == 5);
 
 
     }
@@ -214,15 +215,23 @@ class CouponsDBDAOTest {
 
     @Test
     void updateCouponEndDate() throws SQLException {
-        Coupon coupon = couponsDBDAO.getOneCoupon(23);
 
-        couponsDBDAO.updateCouponEndDate(23, new Date(System.currentTimeMillis()));
+        Coupon coupon = couponsDBDAO.getOneCoupon(23);
+        Date date = coupon.getEndDate();
+
+        couponsDBDAO.updateCouponEndDate(23, new Date(System.currentTimeMillis() + 86400000 * 2));
+        Coupon coupon2 = couponsDBDAO.getOneCoupon(23);
+        System.out.println(date + "" + coupon2.getEndDate());
+        assertTrue(!date.equals(coupon2.getEndDate()));
     }
 
     @Test
-    void updateCouponPrice() {
-        ConnectionPool connectionPool = ConnectionPool.getInstanse();
-
+    void updateCouponPrice() throws SQLException {
+        int id = 24;
+        double price = 25;
+        couponsDBDAO.updateCouponPrice(id, price);
+        Coupon coupon3 = couponsDBDAO.getOneCoupon(id);
+        assertTrue(price == coupon3.getPrice());
     }
 }
 

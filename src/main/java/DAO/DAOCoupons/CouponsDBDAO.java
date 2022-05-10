@@ -358,7 +358,7 @@ public class CouponsDBDAO implements CouponsDAO {
             String image = resultSet.getString("image");
             coupon = new Coupon(couponName, description, companyId,
                     amount, price, categoryId, startDate, endDate, image);
-            coupon.setCouponId(getCouponIdByCouponName(resultSet.getString("couponName")));
+            coupon.setCouponId(couponId);
 
             return coupon;
 
@@ -473,7 +473,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
         }
 
         connectionPool.restoreConnection(connection);
@@ -481,22 +481,16 @@ public class CouponsDBDAO implements CouponsDAO {
 
     @Override
     public void updateCouponPrice(int couponId, double price) throws SQLException {
-
-    }
-
-    public void updateCouponPrice(Coupon coupon, double price) throws SQLException {
-
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set price ='" + price + "' where couponId ='" + coupon.getCouponId() + "'";
+        String sql = "update coupons set price ='" + price + "' where couponId ='" + couponId + "'";
 
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
         }
 
         connectionPool.restoreConnection(connection);
-
     }
 
 }

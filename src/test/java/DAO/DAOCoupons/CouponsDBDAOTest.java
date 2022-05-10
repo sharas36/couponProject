@@ -168,8 +168,11 @@ class CouponsDBDAOTest {
 
     @Test
     void getOneCoupon() throws SQLException {
+        for (int i = 22; i < 34; i++) {
+            System.out.println(couponsDBDAO.getOneCoupon(i).toString());
+        }
         assertNotNull(couponsDBDAO.getOneCoupon(22));
-        System.out.println(couponsDBDAO.getOneCoupon(22).toString());
+
     }
 
     @Test

@@ -11,17 +11,15 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
+import firstStep.ConnectionPool;
 import firstStep.Coupon;
 import firstStep.SystemException;
 
 import javax.swing.plaf.IconUIResource;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -29,15 +27,28 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-        MainFacade mainFacade = userCheckScreen();
-        User user = login(mainFacade);
-        if (user instanceof Admin) {
-            adminMenu((AdminFacade) mainFacade);
-        } else if (user instanceof Company) {
-            companyMenu((CompanyFacade) mainFacade);
-        } else {
-            customerMenu((CustomerFacade) mainFacade);
+
+        ConnectionPool connectionPool = ConnectionPool.getInstanse();
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("i have " + connectionPool.getConnectionPoolSize() + " connection");
+            Connection connection = connectionPool.getConnection();
+            connectionPool.restoreConnection(connection);
+            System.out.println("i have " + connectionPool.getConnectionPoolSize() + " connection");
+
+
         }
+
+
+//        MainFacade mainFacade = userCheckScreen();
+//        User user = login(mainFacade);
+//        if (user instanceof Admin) {
+//            adminMenu((AdminFacade) mainFacade);
+//        } else if (user instanceof Company) {
+//            companyMenu((CompanyFacade) mainFacade);
+//        } else {
+//            customerMenu((CustomerFacade) mainFacade);
+//        }
     }
 
 

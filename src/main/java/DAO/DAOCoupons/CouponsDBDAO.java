@@ -53,19 +53,19 @@ public class CouponsDBDAO implements CouponsDAO {
         customer.setCustomerId(customerId);
 
         if (coupon.getAmount() > 0 && customer != null && !isThisPurchaseExist(couponId, customerId)) {
-            String sql = "insert into customerandcoupons (customerId, couponId,companyId) values (?, ?,?)";
+            String sql = "insert into customerandcoupons (customerId, couponId,companyId,categoryId) values (?, ?,?,?)";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, customer.getCustomerId());
-            preparedStatement.setInt(2, coupon.getCouponId());
+            preparedStatement.setInt(2, couponId);
             preparedStatement.setInt(3, coupon.getCompanyId());
+            preparedStatement.setInt(4, coupon.getCategoryId());
 
 
             synchronized (lock) {
                 preparedStatement.execute();
-                setAmount(-1, couponId);
             }
-
+            setAmount(-1, couponId);
             return true;
         }
 
@@ -427,26 +427,31 @@ public class CouponsDBDAO implements CouponsDAO {
 
     public void setAmount(int add, int couponId) throws SQLException {
 
-
+        ResultSet resultSet;
         Connection connection = connectionPool.getConnection();
 
-        String sql = "select * from coupons where companyId = '" + couponId + "'";
+        String sql = "select * from coupons where couponId = '" + couponId + "'";
 
         synchronized (lock) {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.execute();
-            resultset = preparedStatement.getResultSet();
+            resultSet = preparedStatement.getResultSet();
         }
+
         int oldAmount = 0;
-        while (resultset.next()) {
-            oldAmount = resultset.getInt("amount");
+
+        while (resultSet.next()) {
+            oldAmount = resultSet.getInt("amount");
+            System.out.println("i am here " + oldAmount);
         }
-//        int amount = oldAmount + add;
+
         int amount = oldAmount + add;
+        System.out.println(amount);
 
         sql = " update coupons set amount = '" + amount + "' where couponId = '" + couponId + "'";
         synchronized (lock) {
             preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.execute();
         }
 
         connectionPool.restoreConnection(connection);
@@ -481,11 +486,16 @@ public class CouponsDBDAO implements CouponsDAO {
         connectionPool.restoreConnection(connection);
     }
 
+    @Override
     public void updateCouponPrice(int couponId, double price) throws SQLException {
+
+    }
+
+    public void updateCouponPrice(Coupon coupon, double price) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update coupons set price ='" + price + "' where couponId ='" + couponId + "'";
+        String sql = "update coupons set price ='" + price + "' where couponId ='" + coupon.getCouponId() + "'";
 
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

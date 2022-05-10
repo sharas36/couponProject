@@ -26,7 +26,7 @@ public class Coupon {
 
 
     public Coupon(String couponName, String description, int companyId, int amount, double price,
-                 int categoryId, Date endDate, String imageURL) {
+                  int categoryId, Date endDate, String imageURL) {
         this.couponName = couponName;
         this.description = description;
         this.companyId = companyId;
@@ -35,7 +35,7 @@ public class Coupon {
         this.categoryId = categoryId;
         this.endDate = endDate;
         this.imageURL = imageURL;
-         init();
+        init();
 
     }
 
@@ -52,8 +52,8 @@ public class Coupon {
         this.imageURL = imageURL;
     }
 
-    public Coupon(){
-     init();
+    public Coupon() {
+        init();
     }
 
     private void init() {
@@ -63,11 +63,17 @@ public class Coupon {
 
     }
 
-    public void setDeleted(){
+    public void setDeleted() {
         this.deleted = !this.deleted;
     }
 
-    public void printSomething(){
+    public void printSomething() {
         System.out.println("it is work!");
     }
+
+    public boolean getExpired(long currentTimeInMillisecond) {
+        return this.getEndDate().getTime() <= currentTimeInMillisecond;
+    }
+
+
 }

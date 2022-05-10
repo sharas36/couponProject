@@ -163,17 +163,23 @@ class CouponsDBDAOTest {
 
 
     @Test
-    void getCouponsOfCustomerByMaxPrice() {
+    void getCouponsOfCustomerByMaxPrice() throws SQLException {
+        couponsDBDAO.getCouponsOfCustomerByMaxPrice(1,6);
+        for (Coupon coupon:  couponsDBDAO.getCouponsOfCustomerByMaxPrice(1,6)){
+            System.out.println(coupon.toString());
+        }
     }
 
     @Test
     void getOneCoupon() throws SQLException {
         assertNotNull(couponsDBDAO.getOneCoupon(22));
+        System.out.println(couponsDBDAO.getOneCoupon(25).getEndDate().getTime() < System.currentTimeMillis());
 
     }
 
     @Test
-    void isExpired() {
+    void isExpired() throws SQLException {
+        assertTrue(couponsDBDAO.isExpired());
     }
 
     @Test
@@ -195,7 +201,6 @@ class CouponsDBDAOTest {
         Coupon coupon2 = couponsDBDAO.getOneCoupon(24);
         int x = coupon2.getAmount();
         assertTrue(x - i == 5);
-
 
     }
 

@@ -37,7 +37,7 @@ public interface CouponsDAO {
 
     public ArrayList<Coupon> getCouponsOfCustomerByCategory(int customerId, int categoryId) throws SQLException, InterruptedException;
 
-    public ArrayList<Coupon> getCouponsOfCustomerByMaxPrice(int customerId, double maxPrice) throws SQLException;
+    public List<Coupon> getCouponsOfCustomerByMaxPrice(int customerId, double maxPrice) throws SQLException;
 
     public Coupon getOneCoupon(int couponId) throws SQLException;
 

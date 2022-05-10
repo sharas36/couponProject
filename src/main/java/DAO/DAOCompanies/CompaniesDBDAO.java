@@ -85,6 +85,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             this.resultset = preparedStatement.executeQuery();
         }
+        connectionPool.restoreConnection(connection);
 
         while (this.resultset.next()) {
             String companyName = this.resultset.getString("name");
@@ -92,7 +93,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
             String password = this.resultset.getString("password");
             company = new Company(companyName, email, password);
             company.setCompanyId(companyId);
-            connectionPool.restoreConnection(connection);
+
             return company;
 
         }

@@ -64,11 +64,12 @@ public class CouponsDBDAO implements CouponsDAO {
 
             synchronized (lock) {
                 preparedStatement.execute();
+                setAmount(-1, couponId);
             }
-            setAmount(-1, couponId);
+            connectionPool.restoreConnection(connection);
             return true;
         }
-
+        connectionPool.restoreConnection(connection);
         return false;
     }
 
@@ -225,7 +226,6 @@ public class CouponsDBDAO implements CouponsDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultset = preparedStatement.executeQuery();
         }
-        connectionPool.restoreConnection(connection);
         int id = 0;
         while (resultset.next()) {
             id = resultset.getInt("couponId");

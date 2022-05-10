@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class CouponsDBDAOTest {
     CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
     Coupon coupon = new Coupon
-            ("nameForSql", "tryNowWithAmountAgain", 49, 33,
-                    5.5, 0, new Date(System.currentTimeMillis()), "exampleImageUrL");
+            ("nameForSql", "descripExample", 49, 5,
+                    5.5, 2, new Date(System.currentTimeMillis()), "exampleImageUrL");
 
 
     @Test
@@ -168,9 +168,6 @@ class CouponsDBDAOTest {
 
     @Test
     void getOneCoupon() throws SQLException {
-        for (int i = 22; i < 34; i++) {
-            System.out.println(couponsDBDAO.getOneCoupon(i).toString());
-        }
         assertNotNull(couponsDBDAO.getOneCoupon(22));
 
     }

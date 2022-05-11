@@ -1,6 +1,7 @@
 package firstStep;
 
 import DAO.DAOCoupons.CouponsDBDAO;
+import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,20 +17,23 @@ public class Job extends Thread {
     @Override
     public void run() {
         while (true) {
+
             try {
-                if(couponsDBDAO.isExpired()){
-                    System.out.println("All coupons are valid");
-                }
-                else{
-                    System.out.println("All expired coupons are deleted");
-                }
-                sleep(1000 * 60 *60 * 24);
+                couponsDBDAO.filterExpiredCoupon();
             } catch (SQLException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-        }
-    }
 
+
+            try {
+                sleep(1000 * 60 * 60 * 24);
+            } catch (InterruptedException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+
+    }
 }
+
+

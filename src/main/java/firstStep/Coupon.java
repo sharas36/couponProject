@@ -8,6 +8,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 
+
 public class Coupon {
 
     private static int id = 0;

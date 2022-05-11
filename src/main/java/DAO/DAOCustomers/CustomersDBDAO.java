@@ -71,21 +71,25 @@ public class CustomersDBDAO implements CustomersDAO {
 
     public Customer getCustomer(int customerId) throws SQLException {
         Connection connection = connectionPool.getConnection();
-
+        ResultSet rs;
         String sql = "select * from customers where customerId = '" + customerId + "'";
         Customer customer = null;
+
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                String firstName = rs.getString("firstName");
-                String lastName = rs.getString("lastName");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                customer = new Customer(firstName, lastName, email, password);
-            }
+            rs = preparedStatement.executeQuery();
         }
+
         connectionPool.restoreConnection(connection);
+
+        while (rs.next()) {
+            String firstName = rs.getString("firstName");
+            String lastName = rs.getString("lastName");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            customer = new Customer(firstName, lastName, email, password);
+        }
+
         return customer;
     }
 
@@ -142,12 +146,6 @@ public class CustomersDBDAO implements CustomersDAO {
         }
         connectionPool.restoreConnection(connection);
     }
-
-
-
-
-
-
 
 
 }

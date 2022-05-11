@@ -29,20 +29,7 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException, SystemException {
-        int i = 0;
-        int maxPrice = 6;
-        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-        List<Coupon> couponArrayList = couponsDBDAO.getAllCouponsByCustomer(1);
 
-
-
-//        System.out.println(couponArrayList.size());
-//        System.out.println(couponArrayList.get(0));
-//        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
-//        for (Coupon coupon : sortedListCoupon) {
-//            System.out.print(coupon.getPrice() + " " + i++);
-//            System.out.println();
-//        }
 
 //        MainFacade mainFacade = userCheckScreen();
 //        User user = login(mainFacade);
@@ -54,15 +41,8 @@ public class Main {
 //            customerMenu((CustomerFacade) mainFacade);
 //        }
 
-//        Random random = new Random();
-//        AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
-//        String str = "2023-12-31";
-//        Date date = Date.valueOf(str);
-//        CouponsDBDAO couponsDBDAO = adminFacade.getCouponsDBDAO();
-//        for (int i = 0; i < 2000; i++) {
-//            couponsDBDAO.addCouponPurchase(random.nextInt(100) + 7, random.nextInt(96) + 11);
 
-//        }
+
     }
 
 

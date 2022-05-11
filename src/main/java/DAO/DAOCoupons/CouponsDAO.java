@@ -41,7 +41,7 @@ public interface CouponsDAO {
 
     public Coupon getOneCoupon(int couponId) throws SQLException;
 
-    public boolean isExpired() throws SQLException;
+    public void filterExpiredCoupon() throws SQLException;
 
     public boolean isThisCouponExist(String couponName) throws SQLException;
 

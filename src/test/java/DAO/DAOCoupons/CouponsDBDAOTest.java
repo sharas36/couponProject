@@ -6,19 +6,19 @@ import firstStep.Coupon;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.spec.PSource;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponsDBDAOTest {
     CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
     Coupon coupon = new Coupon
-            ("nameForSql", "descripExample", 49, 5,
+            ("trying1", "descripExample", 49, 5,
                     5.5, 2, new Date(System.currentTimeMillis()), "exampleImageUrL");
 
 
@@ -39,7 +39,7 @@ class CouponsDBDAOTest {
     @Test
     void addCouponPurchase() throws SQLException {
         assertDoesNotThrow(() -> {
-            couponsDBDAO.addCouponPurchase(1, 33);
+            couponsDBDAO.addCouponPurchase(1, 23);
         });
 
     }
@@ -151,7 +151,7 @@ class CouponsDBDAOTest {
 
     @Test
     void getCouponsOfCustomerByCategory() throws SQLException {
-        ArrayList<Coupon> coupons = couponsDBDAO.getCouponsOfCustomerByCategory(1, 0);
+        ArrayList<Coupon> coupons = couponsDBDAO.getCouponsOfCustomerByCategory(1, 1);
         assertTrue(coupons.size() >= 1);
 
 
@@ -164,7 +164,7 @@ class CouponsDBDAOTest {
 
     @Test
     void getCouponsOfCustomerByMaxPrice() throws SQLException {
-        for (Coupon coupon : couponsDBDAO.getCouponsOfCustomerByMaxPrice(1, 4.4)) {
+        for (Coupon coupon : couponsDBDAO.getCouponsOfCustomerByMaxPrice(1, 3)) {
             System.out.println(coupon.toString());
         }
     }
@@ -179,17 +179,15 @@ class CouponsDBDAOTest {
     }
 
     @Test
-    void isExpired() throws SQLException {
-        assertTrue(couponsDBDAO.isExpired());
-    }
-
-    @Test
-    void isThisCouponExist() {
+    void isThisCouponExist() throws SQLException {
+        assertTrue(couponsDBDAO.isThisCouponExist("couponExample"));
+        assertFalse(couponsDBDAO.isThisCouponExist("Example"));
     }
 
     @Test
     void isThisPurchaseExist() throws SQLException {
-        assertTrue(couponsDBDAO.isThisPurchaseExist(1, 89));
+        assertTrue(couponsDBDAO.isThisPurchaseExist(23, 1));
+        assertFalse(couponsDBDAO.isThisPurchaseExist(44, 1));
     }
 
     @Test
@@ -220,12 +218,17 @@ class CouponsDBDAOTest {
     void updateCouponEndDate() throws SQLException {
 
         Coupon coupon = couponsDBDAO.getOneCoupon(23);
-        Date date = coupon.getEndDate();
+        Date previousDate = coupon.getEndDate(); //this date is before the editing
 
-        couponsDBDAO.updateCouponEndDate(23, new Date(System.currentTimeMillis() + 86400000 * 2));
+        String dateString = "2022-05-23";
+        Date laterDate = Date.valueOf(dateString); //this date is after the editing
+
+
+        couponsDBDAO.updateCouponEndDate(23, laterDate);
         Coupon coupon2 = couponsDBDAO.getOneCoupon(23);
-        System.out.println(date + "" + coupon2.getEndDate());
-        assertTrue(!date.equals(coupon2.getEndDate()));
+
+        assertTrue(!previousDate.equals(coupon2.getEndDate()));
+
     }
 
     @Test
@@ -236,5 +239,45 @@ class CouponsDBDAOTest {
         Coupon coupon3 = couponsDBDAO.getOneCoupon(id);
         assertTrue(price == coupon3.getPrice());
     }
+
+    @Test
+    public void filterExpiredCoupon() throws SQLException {
+        int i = 0;
+        List<Coupon> coupons = couponsDBDAO.getAllCoupons();
+
+        List<Coupon> expiredCoupons = coupons.stream().filter
+                (myCoupon -> myCoupon.getExpired(System.currentTimeMillis())).collect(Collectors.toList());
+        for (Coupon coupon : expiredCoupons) {
+
+        }
+
+
+        if (expiredCoupons.get(0) == null) {
+
+            return;
+        } else {
+
+            for (Coupon coupon : expiredCoupons) {
+//                if (!couponsDBDAO.isDelete(coupon.getCouponId())) {
+//                    couponsDBDAO.deleteCoupon(coupon.getCouponId());
+//                    i++;
+//                }
+
+            }
+
+        }
+
+        System.out.println("today been deleted " + i + "coupons");
+
+    }
+
+    @Test
+    public void isDelete() throws SQLException {
+        System.out.println(couponsDBDAO.isDelete(20));
+    }
+
 }
+
+
+
 

@@ -102,6 +102,7 @@ public class CouponsDBDAO implements CouponsDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.execute();
         }
+        connectionPool.restoreConnection(connection);
 
     }
 
@@ -373,7 +374,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         }
 
-        System.out.println("today been deleted " + i + "coupons");
+        System.out.println("today been deleted " + i + " coupons");
 
     }
 
@@ -395,8 +396,6 @@ public class CouponsDBDAO implements CouponsDAO {
             int deleted = resultSet.getInt("deleted");
             return deleted == 1;
         }
-
-        System.out.println(" i ama here in row 390 = should not appear here ");
         return false;
     }
 

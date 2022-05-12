@@ -49,6 +49,7 @@ public class CustomersDBDAO implements CustomersDAO {
         ArrayList<Customer> customers = new ArrayList<>();
         synchronized (lock) {
             resultset = preparedStatement.executeQuery();
+            connectionPool.restoreConnection(connection);
             resultset.last();
             int numOfRows = resultset.getRow();
             if (numOfRows == 0) {
@@ -61,7 +62,8 @@ public class CustomersDBDAO implements CustomersDAO {
                 String lastName = resultset.getString("lastName");
                 String email = resultset.getString("email");
                 String password = resultset.getString("password");
-                User customer = new Customer(firstName, lastName, email, password);
+                Customer customer = new Customer(firstName, lastName, email, password);
+                customer.setCustomerId(customerId);
                 customers.add((Customer) customer);
             }
         }
@@ -88,6 +90,7 @@ public class CustomersDBDAO implements CustomersDAO {
             String email = rs.getString("email");
             String password = rs.getString("password");
             customer = new Customer(firstName, lastName, email, password);
+            customer.setCustomerId(rs.getInt("customerId"));
         }
 
         return customer;
@@ -139,9 +142,12 @@ public class CustomersDBDAO implements CustomersDAO {
     public void updateCustomer(int customerId, String email, String password) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "update customers set email = '" + email + "' and set password = '" + password + "' where customerId = '" + customerId + "'";
+        String sql1 = "update customers set email = '" + email + "' where customerId = '" + customerId + "'";
+        String sql2 = "update customers set password = '" + password + "' where customerId = '" + customerId + "'";
         synchronized (lock) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql1);
+            preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement(sql2);
             preparedStatement.executeUpdate();
         }
         connectionPool.restoreConnection(connection);

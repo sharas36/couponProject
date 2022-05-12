@@ -217,15 +217,15 @@ class CouponsDBDAOTest {
     @Test
     void updateCouponEndDate() throws SQLException {
 
-        Coupon coupon = couponsDBDAO.getOneCoupon(23);
+        Coupon coupon = couponsDBDAO.getOneCoupon(43);
         Date previousDate = coupon.getEndDate(); //this date is before the editing
 
-        String dateString = "2022-05-27";
+        String dateString = "2022-05-11";
         Date laterDate = Date.valueOf(dateString); //this date is after the editing
 
 
-        couponsDBDAO.updateCouponEndDate(23, laterDate);
-        Coupon coupon2 = couponsDBDAO.getOneCoupon(23);
+        couponsDBDAO.updateCouponEndDate(43, laterDate);
+        Coupon coupon2 = couponsDBDAO.getOneCoupon(43);
 
         assertTrue(!previousDate.equals(coupon2.getEndDate()));
 
@@ -233,8 +233,8 @@ class CouponsDBDAOTest {
 
     @Test
     void updateCouponPrice() throws SQLException {
-        int id = 24;
-        double price = 25;
+        int id = 23;
+        double price = 28;
         couponsDBDAO.updateCouponPrice(id, price);
         Coupon coupon3 = couponsDBDAO.getOneCoupon(id);
         assertTrue(price == coupon3.getPrice());
@@ -242,41 +242,24 @@ class CouponsDBDAOTest {
 
     @Test
     public void filterExpiredCoupon() throws SQLException {
-        int i = 0;
-        List<Coupon> coupons = couponsDBDAO.getAllCoupons();
-
-        List<Coupon> expiredCoupons = coupons.stream().filter
-                (myCoupon -> myCoupon.getExpired(System.currentTimeMillis())).collect(Collectors.toList());
-        for (Coupon coupon : expiredCoupons) {
-
-        }
-
-
-        if (expiredCoupons.get(0) == null) {
-
-            return;
-        } else {
-
-            for (Coupon coupon : expiredCoupons) {
-//                if (!couponsDBDAO.isDelete(coupon.getCouponId())) {
-//                    couponsDBDAO.deleteCoupon(coupon.getCouponId());
-//                    i++;
-//                }
-
-            }
-
-        }
-
-        System.out.println("today been deleted " + i + "coupons");
-
+//        int i = 0;
+//        List<Coupon> coupons = couponsDBDAO.getAllCoupons();
+//
+//        List<Coupon> expiredCoupons = coupons.stream().filter
+//                (myCoupon -> myCoupon.getExpired(System.currentTimeMillis())).collect(Collectors.toList());
+//        for (Coupon coupon : expiredCoupons) {
+//            System.out.println( coupon.getCouponId() +" " +coupon.getEndDate());
+//        }
+        couponsDBDAO.filterExpiredCoupon();
     }
 
     @Test
     public void isDelete() throws SQLException {
         System.out.println(couponsDBDAO.isDelete(20));
     }
-
 }
+
+
 
 
 

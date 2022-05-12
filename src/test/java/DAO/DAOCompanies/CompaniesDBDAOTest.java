@@ -28,10 +28,10 @@ class CompaniesDBDAOTest {
     @Test
     void deleteCompany() throws SQLException {
         assertDoesNotThrow(() -> {
-            companiesDBDAO.deleteCompany(3);
+            companiesDBDAO.deleteCompany(7);
         });
 
-        Company company = companiesDBDAO.getOneCompany(3);
+        Company company = companiesDBDAO.getOneCompany(9);
         assertNull(company);
     }
 

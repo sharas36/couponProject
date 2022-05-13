@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.sql.SQLException;
 @Data
-public abstract  class MainFacade {
+public abstract class MainFacade {
 
     protected CompaniesDBDAO companiesDBDAO;
     protected CouponsDBDAO couponsDBDAO;

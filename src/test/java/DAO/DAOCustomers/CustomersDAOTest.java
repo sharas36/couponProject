@@ -46,7 +46,6 @@ class CustomersDAOTest {
 
     @Test
     void getAllCustomers() throws SQLException {
-        customersDBDAO.getAllCustomers();
         List<Customer> customerList = customersDBDAO.getAllCustomers();
         assertNotNull(customerList);
         assertTrue(customerList.get(0) != null);

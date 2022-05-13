@@ -35,7 +35,7 @@ public class CustomerFacade extends MainFacade{
     }
 
     public void purchaseCoupon(int couponId) throws SQLException, SystemException {
-        if(couponsDBDAO.getOneCoupon(couponId).getAmount() == 0 || couponsDBDAO.getOneCoupon(couponId).getDeleted().booleanValue() == true){
+        if(couponsDBDAO.getOneCoupon(couponId).getAmount() == 0 || couponsDBDAO.getOneCoupon(couponId) == null){
             throw new SystemException("This coupon is not available");
         }
         couponsDBDAO.addCouponPurchase(couponId, this.customerId);
@@ -80,5 +80,9 @@ public class CustomerFacade extends MainFacade{
 
     public Customer getCustomerDetails() throws SQLException {
         return customersDBDAO.getCustomer(this.customerId);
+    }
+
+    public void setCustomerId(int customerId){
+        this.customerId = customerId;
     }
 }

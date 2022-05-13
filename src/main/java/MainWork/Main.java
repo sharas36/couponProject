@@ -29,17 +29,21 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException, SystemException {
-        int i = 0;
-        int maxPrice = 6;
+//        int i = 0;
+//        int maxPrice = 6;
+//        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+//        List<Coupon> couponArrayList = couponsDBDAO.getAllCouponsByCustomer(1);
+//
+//        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
+//        for (Coupon coupon : sortedListCoupon) {
+//            System.out.print(coupon.getPrice() + " " + i++);
+//            System.out.println();
+//        }
         CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-        List<Coupon> couponArrayList = couponsDBDAO.getAllCouponsByCustomer(1);
-
-        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
-        for (Coupon coupon : sortedListCoupon) {
-            System.out.print(coupon.getPrice() + " " + i++);
-            System.out.println();
-        }
-
+        CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
+        CustomersDBDAO customersDBDAO = new CustomersDBDAO();
+        CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO,customersDBDAO);
+        System.out.println(couponsDBDAO.getAllCouponsByCustomer(7).size());
 //        MainFacade mainFacade = userCheckScreen();
 //        User user = login(mainFacade);
 //        if (user instanceof Admin) {

@@ -3,12 +3,15 @@ package Facade;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
+import Users.Company;
 import firstStep.Coupon;
 import firstStep.SystemException;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,38 +33,57 @@ class CompanyFacadeTest {
     }
 
     @Test
-    void addCoupon() {
+    void addCoupon() throws SQLException {
         assertThrows(SystemException.class, () -> {
-            companyFacade.addCoupon(new Coupon("testCoupon", "Test", 5, 100, 7.7,  1, new Date(99999999), "test"));
+            companyFacade.addCoupon(new Coupon("test", "Test", 1, 100, 7.7,  1, new Date(99999999), "test"));
         });
 
+        assertTrue(companyFacade.getCouponsDBDAO().isThisCouponExist("testCoupon"));
+
     }
 
     @Test
-    void updateCouponPrice() {
+    void updateCouponPrice() throws SQLException {
+
+        assertDoesNotThrow(() -> {
+            companyFacade.updateCouponPrice(companyFacade.getCouponsDBDAO().getOneCoupon(107), 50);
+        });
+
+        assertThrows(SystemException.class, () -> {
+            companyFacade.updateCouponPrice(companyFacade.getCouponsDBDAO().getOneCoupon(108), 50);
+        });
+
+        assertTrue(companyFacade.getCouponsDBDAO().getOneCoupon(107).getPrice() == 50);
     }
 
     @Test
-    void deleteCoupon() {
+    void deleteCoupon() throws SQLException {
+        assertThrows(SystemException.class, () -> {
+            companyFacade.deleteCoupon(108);
+        });
+        assertDoesNotThrow(() -> {
+            companyFacade.deleteCoupon(106);
+        });
+        assertTrue(companyFacade.getCouponsDBDAO().isThisCouponExist(companyFacade.couponsDBDAO.getOneCoupon(106).getCouponName()));
     }
 
     @Test
-    void getAllCompanyCoupons() {
+    void getAllCompanyCoupons() throws SQLException {
+
     }
 
     @Test
-    void getCompanyCouponsByCategory() {
+    void getCompanyCouponsByCategory() throws SQLException {
+
     }
 
     @Test
-    void getCompanyCouponsByMaxPrice() {
+    void getCompanyCouponsByMaxPrice() throws SQLException {
+
     }
 
     @Test
     void getCompanyDetails() {
     }
 
-    @Test
-    void setCompanyId() {
-    }
 }

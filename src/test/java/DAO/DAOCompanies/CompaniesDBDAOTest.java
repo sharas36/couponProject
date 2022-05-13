@@ -84,7 +84,7 @@ class CompaniesDBDAOTest {
     void updateCompany() throws SQLException {
         String email = "emailChangeAt:5/8/22";
         String password = "emailChangeAt:5/8/22";
-        int id = 2;
+        int id = 17;
 
         assertDoesNotThrow(() -> {
             companiesDBDAO.updateCompany(companiesDBDAO.getOneCompany(id), email, password);

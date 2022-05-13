@@ -35,6 +35,9 @@ public class CompanyFacade extends MainFacade {
         if (couponsDBDAO.isThisCouponExist(coupon.getCouponName())) {
             throw new SystemException("This coupon is already exist");
         }
+        if(!companiesDBDAO.isThisMailExist(companiesDBDAO.getOneCompany(coupon.getCompanyId()).getEmail())){
+            throw new SystemException("This company isnt exist");
+        }
         couponsDBDAO.addCoupon(coupon);
         companiesDBDAO.getOneCompany(this.companyId).addCoupon(coupon);
     }

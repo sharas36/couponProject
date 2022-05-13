@@ -86,18 +86,18 @@ public class AdminFacade extends MainFacade {
         this.customersDBDAO.addCustomer(customer);
     }
 
-    public void updateCustomer(Customer customer, String email, String password) throws SystemException, SQLException {
-        if (!this.customersDBDAO.isThisMailExist(customer.getEmail())) {
+    public void updateCustomer(int customerId, String email, String password) throws SystemException, SQLException {
+        if (!this.customersDBDAO.isThisMailExist(customersDBDAO.getCustomer(customerId).getEmail())) {
             throw new SystemException("This customer isnt exist");
         }
-        this.customersDBDAO.updateCustomer(customer.getCustomerId(), email, password);
+        this.customersDBDAO.updateCustomer(customerId, email, password);
     }
 
     public void deleteCustomer(int customerId) throws SQLException, SystemException {
         if (customersDBDAO.getCustomer(customerId) == null) {
             throw new SystemException("This customer isnt exist");
         }
-        this.companiesDBDAO.deleteCompany(customerId);
+        this.customersDBDAO.deleteCustomer(customerId);
     }
 
     public ArrayList<Customer> getAllCustomers() throws SQLException, SystemException {

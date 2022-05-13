@@ -4,10 +4,12 @@ import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Company;
+import Users.Customer;
 import firstStep.SystemException;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,30 +59,64 @@ class AdminFacadeTest {
     }
 
     @Test
-    void getAllCompanies() {
+    void getAllCompanies() throws SQLException {
+        ArrayList<Company> companies = adminFacade.getCompaniesDBDAO().getAllCompanies();
+        assertNotNull(companies);
+        assertTrue(companies.size() == 114);
     }
 
     @Test
-    void getOneCompany() {
+    void getOneCompany() throws SystemException, SQLException {
+        Company company = adminFacade.getOneCompany(120);
+        assertNotNull(company);
+        System.out.println(company.getCompanyName());
     }
 
     @Test
-    void addCustomer() {
+    void addCustomer() throws SystemException, SQLException {
+        Customer customer = new Customer("test", "Customer", "test@gmail.com", "12345");
+        adminFacade.addCustomer(customer);
+        assertNotNull(adminFacade.getOneCustomer(customer.getCustomerId()));
     }
 
     @Test
-    void updateCustomer() {
+    void updateCustomer() throws SystemException, SQLException {
+
+        assertDoesNotThrow( () ->{
+            adminFacade.updateCustomer(100, "updateTest@gmail.com", "updateTest");
+        });
+
+        System.out.println(adminFacade.getOneCustomer(100).getEmail());
+        System.out.println(adminFacade.getOneCustomer(100).getPassword());
+
     }
 
     @Test
-    void deleteCustomer() {
+    void deleteCustomer() throws SystemException, SQLException {
+
+        assertDoesNotThrow( () ->{
+            adminFacade.deleteCustomer(106);
+        });
+
+        assertThrows(SystemException.class, () -> {
+            adminFacade.getOneCustomer(106);
+        });
     }
 
     @Test
-    void getAllCustomers() {
+    void getAllCustomers() throws SystemException, SQLException {
+        assertDoesNotThrow(()->{
+            adminFacade.getAllCustomers();
+        });
+        assertNotNull(adminFacade.getAllCustomers());
+        assertTrue(adminFacade.getAllCustomers().size() == 99);
     }
 
     @Test
-    void getOneCustomer() {
+    void getOneCustomer() throws SystemException, SQLException {
+        assertDoesNotThrow(()->{
+            adminFacade.getOneCustomer(107);
+        });
+        assertTrue(adminFacade.getOneCustomer(100).getLastName().equals("92"));
     }
 }

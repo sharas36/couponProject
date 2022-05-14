@@ -108,7 +108,8 @@ public class CustomersDBDAO implements CustomersDAO {
         Connection connection = connectionPool.getConnection();
         String sql = "select * from customers where email ='" + email + "' and password = '" + password + "'";
         synchronized (lock) {
-            resultset = preparedStatement.executeQuery(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            resultset = preparedStatement.executeQuery();
             connectionPool.restoreConnection(connection);
         }
         if (resultset.next()) {

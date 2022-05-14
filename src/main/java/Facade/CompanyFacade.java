@@ -7,6 +7,7 @@ import firstStep.Coupon;
 import firstStep.SystemException;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public class CompanyFacade extends MainFacade {
@@ -37,6 +38,9 @@ public class CompanyFacade extends MainFacade {
         }
         if(!companiesDBDAO.isThisMailExist(companiesDBDAO.getOneCompany(coupon.getCompanyId()).getEmail())){
             throw new SystemException("This company isnt exist");
+        }
+        if(coupon.getEndDate().getTime()<System.currentTimeMillis()){
+            throw new SystemException("The end date already pass");
         }
         couponsDBDAO.addCoupon(coupon);
         companiesDBDAO.getOneCompany(this.companyId).addCoupon(coupon);

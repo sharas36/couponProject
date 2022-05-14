@@ -97,7 +97,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public void deleteCoupon(int couponId) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
-        String sql = "update coupons set deleted = " + 1 + " where couponId = '" + couponId + "'";
+        String sql = "delete from coupons where couponId = '" + couponId + "'";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.execute();
@@ -165,7 +165,7 @@ public class CouponsDBDAO implements CouponsDAO {
             double price = resultSet.getDouble("price");
             String image = resultSet.getString("image");
             Coupon coupon = new Coupon(couponName, description, companyId,
-                    amount, price, categoryId, startDate, endDate, image);
+                    amount, price, categoryId, endDate, image);
             coupon.setCouponId(couponId);
             coupons.add(coupon);
         }
@@ -214,7 +214,6 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         connectionPool.restoreConnection(connection);
         int i = 0;
-
         while (resultSet.next()) {
             coupons.add(getOneCoupon(resultSet.getInt("couponId")));
         }
@@ -325,14 +324,13 @@ public class CouponsDBDAO implements CouponsDAO {
         ResultSet resultSet;
         Connection connection = connectionPool.getConnection();
         String sql = "select * from coupons where couponId = '" + couponId + "'";
-        Coupon coupon = null;
+        Coupon coupon = new Coupon();
         synchronized (lock) {
             preparedStatement = connection.prepareStatement(sql);
         }
         resultSet = preparedStatement.executeQuery();
         connectionPool.restoreConnection(connection);
         while (resultSet.next()) {
-            int idCoupon = resultSet.getInt("couponId");
             int companyId = resultSet.getInt("companyId");
             int categoryId = resultSet.getInt("categoryId");
             String couponName = resultSet.getString("couponName");
@@ -350,7 +348,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
         }
 
-        return null;
+        return coupon;
     }
 
     public void filterExpiredCoupon() throws SQLException {

@@ -24,6 +24,7 @@ public class Coupon {
     private java.sql.Date endDate;
     private String imageURL;
     private Boolean deleted = false;
+    private Boolean notCreatet = false;
 
 
     public Coupon(String couponName, String description, int companyId, int amount, double price,
@@ -51,10 +52,11 @@ public class Coupon {
         this.startDate = startDate;
         this.endDate = endDate;
         this.imageURL = imageURL;
+        init();
     }
 
     public Coupon() {
-        init();
+        this.notCreatet = true;
     }
 
     private void init() {

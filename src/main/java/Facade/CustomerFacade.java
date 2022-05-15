@@ -4,9 +4,7 @@ import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
 import Users.Customer;
-import firstStep.Category;
 import firstStep.Coupon;
-import firstStep.SystemException;
 import firstStep.SystemException;
 
 import java.sql.SQLException;

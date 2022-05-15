@@ -60,8 +60,6 @@ public class Coupon {
     }
 
     private void init() {
-        java.util.Date myDate = new java.util.Date();
-        //this.startDate = new Date(myDate.getTime());
         this.startDate = new Date(System.currentTimeMillis());
 
     }

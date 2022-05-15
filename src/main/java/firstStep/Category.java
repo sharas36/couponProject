@@ -1,22 +1,29 @@
 package firstStep;
 
-import java.util.ArrayList;
-import java.util.List;
+public enum Category {
 
-public class Category {
 
-	private String categoryName;
-	private List<Coupon> coupons = new ArrayList<>();
+    TRAVEL(1),
+    CLOTHING(2),
+    TRANSPORTATION(3),
+    KITCHEN(4),
+    GARDEN(5),
+    SPORT(6),
+    CAR(7),
+    COMPUTER(8),
+    CONSTRUCTION(9),
+    FOOD(10);
 
-	public Category(int categoryId, String categoryName) {
-		this.categoryName = categoryName;
-	}
+    int categoryId;
 
-	private void addCoupon(Coupon coupon){
-		this.coupons.add(coupon);
-	}
+    Category (int categoryId) {
+        this.categoryId = categoryId;
+    }
 
-	private void deleteCoupon(Coupon coupon){
-		this.coupons.remove(coupon);
-	}
+    public int getCategoryId(){
+    return this.categoryId;
+    }
+
+
 }
+

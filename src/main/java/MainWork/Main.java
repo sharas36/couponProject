@@ -11,16 +11,12 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
-import firstStep.ConnectionPool;
+import firstStep.Category;
 import firstStep.Coupon;
 import firstStep.SystemException;
 
-import javax.swing.plaf.IconUIResource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -29,30 +25,26 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException, SystemException {
-//        int i = 0;
-//        int maxPrice = 6;
-//        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-//        List<Coupon> couponArrayList = couponsDBDAO.getAllCouponsByCustomer(1);
-//
-//        List<Coupon> sortedListCoupon = couponArrayList.stream().filter(c -> c.getPrice() <= maxPrice).collect(Collectors.toList());
-//        for (Coupon coupon : sortedListCoupon) {
-//            System.out.print(coupon.getPrice() + " " + i++);
-//            System.out.println();
-//        }
+
         CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
         CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
         CustomersDBDAO customersDBDAO = new CustomersDBDAO();
         CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO,customersDBDAO);
         System.out.println(couponsDBDAO.getAllCouponsByCustomer(7).size());
-//        MainFacade mainFacade = userCheckScreen();
-//        User user = login(mainFacade);
-//        if (user instanceof Admin) {
-//            adminMenu((AdminFacade) mainFacade);
-//        } else if (user instanceof Company) {
-//            companyMenu((CompanyFacade) mainFacade);
-//        } else {
-//            customerMenu((CustomerFacade) mainFacade);
-//        }
+        MainFacade mainFacade = userCheckScreen();
+        User user = login(mainFacade);
+        if (user instanceof Admin) {
+            adminMenu((AdminFacade) mainFacade);
+        } else if (user instanceof Company) {
+            companyMenu((CompanyFacade) mainFacade);
+        } else {
+            customerMenu((CustomerFacade) mainFacade);
+        }
+
+        Category category = Category.CAR;
+        System.out.println(category.toString() + category.getCategoryId());
+
+
 
 //        Random random = new Random();
 //        AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());

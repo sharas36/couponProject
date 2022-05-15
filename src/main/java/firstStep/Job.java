@@ -16,20 +16,17 @@ public class Job extends Thread {
 
     @Override
     public void run() {
+
         while (true) {
 
             try {
                 couponsDBDAO.filterExpiredCoupon();
-            } catch (SQLException e) {
+                sleep(1000 * 60 * 60 * 24);
+            } catch (SQLException | InterruptedException e) {
                 e.printStackTrace();
             }
 
 
-            try {
-                sleep(1000 * 60 * 60 * 24);
-            } catch (InterruptedException e) {
-                System.out.println(e.toString());
-            }
 
         }
 

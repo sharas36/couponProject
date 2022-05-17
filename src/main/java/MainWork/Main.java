@@ -32,15 +32,15 @@ public class Main {
         CustomersDBDAO customersDBDAO = new CustomersDBDAO();
         CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO, customersDBDAO);
         System.out.println(couponsDBDAO.getAllCouponsByCustomer(7).size());
-        MainFacade mainFacade = userCheckScreen();
-        User user = login(mainFacade);
-        if (user instanceof Admin) {
-            adminMenu((AdminFacade) mainFacade);
-        } else if (user instanceof Company) {
-            companyMenu((CompanyFacade) mainFacade);
-        } else {
-            customerMenu((CustomerFacade) mainFacade);
-        }
+  //     MainFacade mainFacade = userCheckScreen();
+//        User user = login(mainFacade);
+//        if (user instanceof Admin) {
+//            adminMenu((AdminFacade) mainFacade);
+//        } else if (user instanceof Company) {
+//            companyMenu((CompanyFacade) mainFacade);
+//        } else {
+//            customerMenu((CustomerFacade) mainFacade);
+//        }
 
         Category category = Category.CAR;
         System.out.println(category.toString() + category.getCategoryId());
@@ -90,7 +90,7 @@ public class Main {
             System.out.println("Do you want to choose again your type again? y/n");
             switch (scanner.next()) {
                 case "y":
-                    mainFacade = userCheckScreen();
+                   // mainFacade = userCheckScreen();
                     break;
                 case "n":
                     break;

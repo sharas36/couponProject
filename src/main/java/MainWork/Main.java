@@ -12,6 +12,7 @@ import Users.Company;
 import Users.Customer;
 import Users.User;
 import firstStep.Category;
+import firstStep.ClientType;
 import firstStep.Coupon;
 import firstStep.SystemException;
 
@@ -29,7 +30,7 @@ public class Main {
         CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
         CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
         CustomersDBDAO customersDBDAO = new CustomersDBDAO();
-        CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO,customersDBDAO);
+        CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO, customersDBDAO);
         System.out.println(couponsDBDAO.getAllCouponsByCustomer(7).size());
         MainFacade mainFacade = userCheckScreen();
         User user = login(mainFacade);
@@ -45,20 +46,10 @@ public class Main {
         System.out.println(category.toString() + category.getCategoryId());
 
 
-
-//        Random random = new Random();
-//        AdminFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
-//        String str = "2023-12-31";
-//        Date date = Date.valueOf(str);
-//        CouponsDBDAO couponsDBDAO = adminFacade.getCouponsDBDAO();
-//        for (int i = 0; i < 2000; i++) {
-//            couponsDBDAO.addCouponPurchase(random.nextInt(100) + 7, random.nextInt(96) + 11);
-
-//        }
     }
 
 
-    public static MainFacade userCheckScreen() {
+    public static ClientType userCheckScreen() {
 
         System.out.println("1. Admin \n" +
                 "2. Company \n" +
@@ -73,11 +64,11 @@ public class Main {
         }
         switch (Integer.parseInt(choice)) {
             case 1:
-                return new AdminFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
+                return ClientType.ADMINISTRATOR;
             case 2:
-                return new CompanyFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
+                return ClientType.COMPANY;
             case 3:
-                return new CustomerFacade(new CompaniesDBDAO(), new CouponsDBDAO(), new CustomersDBDAO());
+                return ClientType.CUSTOMER;
             default:
                 System.out.println("Wrong choice! Please try again.");
                 userCheckScreen();

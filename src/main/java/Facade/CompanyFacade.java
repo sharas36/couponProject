@@ -7,8 +7,10 @@ import firstStep.Coupon;
 import firstStep.SystemException;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CompanyFacade extends MainFacade {
 
@@ -69,17 +71,32 @@ public class CompanyFacade extends MainFacade {
         return coupons;
     }
 
-    public List<Coupon> getCompanyCouponsByCategory(int categoryId){
-
-        return null;
+    public List<Coupon> getCompanyCouponsByCategory(int categoryId) throws SystemException, SQLException {
+        List<Coupon> allCoupons = couponsDBDAO.getAllCouponsOfCompany(this.companyId);
+//        List<Coupon> relevantCoupons = new ArrayList<>();
+//        for (Coupon coupon : allCoupons) {
+//            if(coupon.getCategoryId() == categoryId){
+//                relevantCoupons.add(coupon);
+//            }
+//        }
+        allCoupons = allCoupons.stream().filter(coupon -> coupon.getCategoryId() == categoryId).collect(Collectors.toList());
+        if (allCoupons.size() == 0){
+            throw new SystemException("You dont have relevant coupons");
+        }
+        return allCoupons;
     }
 
     public List<Coupon> getCompanyCouponsByMaxPrice(int maxPrice) throws SystemException, SQLException {
         List<Coupon> allCoupons = getAllCompanyCoupons();
-        for (Coupon coupon : allCoupons) {
-            if(coupon.getPrice() > maxPrice){
-                allCoupons.remove(coupon);
-            }
+//        List<Coupon> relevantCoupons = new ArrayList<>();
+//        for (Coupon coupon : allCoupons) {
+//            if(coupon.getPrice() <= maxPrice){
+//                relevantCoupons.add(coupon);
+//            }
+//        }
+        allCoupons = allCoupons.stream().filter(coupon -> coupon.getPrice() <= maxPrice).collect(Collectors.toList());
+        if (allCoupons.size() == 0){
+            System.out.println("You dont have relevant coupons");
         }
         return allCoupons;
     }
@@ -90,5 +107,9 @@ public class CompanyFacade extends MainFacade {
 
     public void setCompanyId(String email) throws SQLException {
         this.companyId = companiesDBDAO.getCompanyId(email);
+    }
+
+    public void setCompanyId(int companyId) throws SQLException {
+        this.companyId = companyId;
     }
 }

@@ -68,22 +68,31 @@ class CompanyFacadeTest {
     }
 
     @Test
-    void getAllCompanyCoupons() throws SQLException {
+    void getAllCompanyCoupons() throws SQLException, SystemException {
 
+        this.companyFacade.setCompanyId(1);
+        assertTrue(companyFacade.getAllCompanyCoupons().size() == 5);
+        assertThrows(SystemException.class, () -> {
+            this.companyFacade.getAllCompanyCoupons();
+        });
     }
 
     @Test
-    void getCompanyCouponsByCategory() throws SQLException {
-
+    void getCompanyCouponsByCategory() throws SQLException, SystemException {
+        this.companyFacade.setCompanyId(169);
+        assertTrue(this.companyFacade.getCompanyCouponsByCategory(31).size() == 1);
     }
 
     @Test
-    void getCompanyCouponsByMaxPrice() throws SQLException {
-
+    void getCompanyCouponsByMaxPrice() throws SQLException, SystemException {
+        this.companyFacade.setCompanyId(169);
+        assertTrue(this.companyFacade.getCompanyCouponsByMaxPrice(800).size() == 4);
     }
 
     @Test
-    void getCompanyDetails() {
+    void getCompanyDetails() throws SQLException {
+        this.companyFacade.setCompanyId(169);
+        companyFacade.getCompanyDetails();
     }
 
 }

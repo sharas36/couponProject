@@ -43,32 +43,35 @@ class CustomerFacadeTest {
 
     @Test
     void getAllCustomersCoupons() throws SQLException, SystemException {
-        int customerId = 7;
-        this.customerFacade.setCustomerId(customerId);
+        this.customerFacade.setCustomerId(7);
         List<Coupon> couponList = this.customerFacade.getAllCustomersCoupons();
         System.out.println(couponList.size());
         for (Coupon coupon : couponList){
             System.out.println(coupon.toString());
         }
-//        System.out.println(couponList.get(0));
-//        System.out.println(couponList.size());
-//        assertTrue(couponList.size() == 9);
-//        customerId = 6;
-//        couponList = customerFacade.getAllCustomersCoupons();
-//        assertTrue(couponList.isEmpty());
 
     }
 
 
     @Test
-    void getCustomersCouponsOfCategory() {
+    void getCustomersCouponsOfCategory() throws SystemException, SQLException {
+        this.customerFacade.setCustomerId(7);
+        assertTrue(customerFacade.getCustomersCouponsOfCategory(32).size() == 1);
     }
 
     @Test
-    void getCustomersCouponsByMaxPrice() {
+    void getCustomersCouponsByMaxPrice() throws SystemException, SQLException {
+        this.customerFacade.setCustomerId(7);
+        List<Coupon> coupons = customerFacade.getAllCustomersCoupons();
+        for(Coupon coupon : coupons){
+            System.out.println(coupon.getPrice());
+        }
+        assertTrue(customerFacade.getCustomersCouponsByMaxPrice(500).size() <= 5);
     }
 
     @Test
-    void getCustomerDetails() {
+    void getCustomerDetails() throws SQLException {
+        this.customerFacade.setCustomerId(7);
+        System.out.println(customerFacade.getCustomerDetails());
     }
 }

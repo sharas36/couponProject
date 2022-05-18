@@ -43,7 +43,7 @@ class CustomersDAOTest {
 
 
     }
-    //vdfvdfvdfvdf
+//dfgdfgdgdfgdfg
     @Test
     void getAllCustomers() throws SQLException {
         List<Customer> customerList = customersDBDAO.getAllCustomers();

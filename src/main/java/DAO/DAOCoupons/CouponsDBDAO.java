@@ -356,18 +356,17 @@ public class CouponsDBDAO implements CouponsDAO {
         List<Coupon> coupons = getAllCoupons();
 
         List<Coupon> expiredCoupons = coupons.stream().filter
-                (myCoupon -> myCoupon.getExpired(System.currentTimeMillis())).collect(Collectors.toList());
+                (c -> c.getExpired(System.currentTimeMillis())).collect(Collectors.toList());
 
 
-        if (expiredCoupons.get(0) == null) {
+        if (expiredCoupons.isEmpty()) {
             return;
         } else {
 
             for (Coupon coupon : expiredCoupons) {
-                if (!isDelete(coupon.getCouponId())) {
+
                     deleteCoupon(coupon.getCouponId());
                     i++;
-                }
             }
 
         }

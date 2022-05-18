@@ -51,7 +51,7 @@ public class Main {
 //fsdfdsfsd
     public static ClientType userCheckScreen() {
 
-        System.out.println("1. Admin \n" +
+        System.out.println("1. Amin \n" +
                 "2. Company \n" +
                 "3. customer");
 

@@ -118,7 +118,7 @@ class CouponsDBDAOTest {
     @Test
     void getAllCouponsByCustomer() throws SQLException {
         assertNotNull(couponsDBDAO.getAllCouponsByCustomer(1));
-        assertTrue(couponsDBDAO.getAllCouponsByCustomer(3).size() == 6);
+        assertTrue(couponsDBDAO.getAllCouponsByCustomer(3).size() <= 0);
     }
 
     @Test
@@ -129,7 +129,7 @@ class CouponsDBDAOTest {
 
     @Test
     void getCouponsOfCompanyByCategory() throws SQLException {
-        assertTrue(couponsDBDAO.getCouponsOfCompanyByCategory(59, 1).size() > 0);
+        assertTrue(couponsDBDAO.getCouponsOfCompanyByCategory(99, 1).size() > 0);
 
         for (Coupon coupon :
                 couponsDBDAO.getCouponsOfCompanyByCategory(59, 1)
@@ -220,7 +220,7 @@ class CouponsDBDAOTest {
         Coupon coupon = couponsDBDAO.getOneCoupon(43);
         Date previousDate = coupon.getEndDate(); //this date is before the editing
 
-        String dateString = "2022-05-28";
+        String dateString = "2022-05-11";
         Date laterDate = Date.valueOf(dateString); //this date is after the editing
 
 

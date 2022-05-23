@@ -504,4 +504,16 @@ public class CouponsDBDAO implements CouponsDAO {
         connectionPool.restoreConnection(connection);
     }
 
+    public boolean isThisCouponExistForThisCompany(String couponName, int companyId) throws SQLException {
+        Connection connection = connectionPool.getConnection();
+
+        String sql = "select * from coupons where couponName = '" + couponName + "' and companyId = '" + companyId  + "'" ;
+        synchronized (lock) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            resultset = preparedStatement.executeQuery();
+        }
+        connectionPool.restoreConnection(connection);
+
+        return resultset.next();
+    }
 }

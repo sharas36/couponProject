@@ -47,6 +47,8 @@ public interface CouponsDAO {
 
     public boolean isThisPurchaseExist(int couponId, int customerId) throws SQLException;
 
+    public boolean isThisCouponExistForThisCompany(String couponName, int companyId) throws SQLException;
+
     public void setAmount(int add, int couponsId) throws SQLException;
 
     public void updateCouponDescription(int couponId, String description) throws SQLException;

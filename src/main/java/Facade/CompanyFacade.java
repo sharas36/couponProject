@@ -33,7 +33,7 @@ public class CompanyFacade extends MainFacade {
     }
 
     public void addCoupon(Coupon coupon) throws SQLException, SystemException {
-        if (couponsDBDAO.isThisCouponExist(coupon.getCouponName())) {
+        if (couponsDBDAO.isThisCouponExistForThisCompany(coupon.getCouponName(), this.companyId)) {
             throw new SystemException("This coupon is already exist");
         }
         if(!companiesDBDAO.isThisMailExist(companiesDBDAO.getOneCompany(coupon.getCompanyId()).getEmail())){

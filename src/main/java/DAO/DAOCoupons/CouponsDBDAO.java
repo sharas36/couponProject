@@ -303,7 +303,7 @@ public class CouponsDBDAO implements CouponsDAO {
         Connection connection = connectionPool.getConnection();
         ResultSet resultSet;
         ArrayList<Coupon> coupons = new ArrayList<>();
-        String sql = "select * from customerandcoupons where customerId = '" + customerId + "' and categoryId = '" + categoryId + "'";
+        String sql = "select * from customerandcoupons where customerId = '" + customerId +"";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
@@ -416,7 +416,7 @@ public class CouponsDBDAO implements CouponsDAO {
     @Override
     public boolean isThisPurchaseExist(int couponId, int customerId) throws SQLException {
         Connection connection = connectionPool.getConnection();
-        String sql = "select * from customerandcoupons where customerId ='" + customerId + "' and couponId = '" + couponId + "'";
+        String sql = "select * from customerandcoupons where customerId =" + customerId + " and couponId = " + couponId + "";
 
         preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
@@ -507,7 +507,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public boolean isThisCouponExistForThisCompany(String couponName, int companyId) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "select * from coupons where couponName = '" + couponName + "' and companyId = '" + companyId  + "'" ;
+        String sql = "select * from coupons where couponName = " + couponName + " and companyId = " + companyId  + "" ;
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultset = preparedStatement.executeQuery();

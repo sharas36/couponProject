@@ -258,6 +258,7 @@ class CouponsDBDAOTest {
         System.out.println(couponsDBDAO.isDelete(20));
     }
 
+    @Test
     public void isThisCouponExistForThisCompany() throws SQLException {
 
         assertTrue(couponsDBDAO.isThisCouponExistForThisCompany("'couponExample'", 59));

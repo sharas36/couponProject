@@ -13,7 +13,6 @@ public class Job extends Thread {
 
     private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
 
-
     @Override
     public void run() {
 

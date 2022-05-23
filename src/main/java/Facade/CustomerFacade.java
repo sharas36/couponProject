@@ -37,7 +37,9 @@ public class CustomerFacade extends MainFacade{
         if(couponsDBDAO.getOneCoupon(couponId).getAmount() == 0 || couponsDBDAO.getOneCoupon(couponId) == null){
             throw new SystemException("This coupon is not available");
         }
-        couponsDBDAO.addCouponPurchase(couponId, this.customerId);
+        if(!couponsDBDAO.addCouponPurchase(couponId, this.customerId)){
+            throw new SystemException("You already purchase this coupon");
+        }
     }
 
     public List<Coupon> getAllCustomersCoupons() throws SystemException, SQLException {

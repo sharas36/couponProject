@@ -108,15 +108,12 @@ public class CouponsDBDAO implements CouponsDAO {
     public void deleteAllPurchasesForOneCoupon(int couponId) throws SQLException {
 
         Connection connection = connectionPool.getConnection();
-        String sql = "select from customerandcoupons where couponId = '" + couponId + "'";
+        String sql = "delete from customerandcoupons where couponId = '" + couponId + "'";
         synchronized (lock) {
             preparedStatement = connection.prepareStatement(sql);
-            resultset = preparedStatement.executeQuery();
+            preparedStatement.execute();
         }
-        while (resultset.next()) {
-            int customerId = resultset.getInt("custonerId");
-            deleteCouponPurchase(couponId, customerId);
-        }
+
         connectionPool.restoreConnection(connection);
     }
 

@@ -98,6 +98,7 @@ public class AdminFacade extends MainFacade {
             throw new SystemException("This customer isnt exist");
         }
         this.customersDBDAO.deleteCustomer(customerId);
+        this.couponsDBDAO.deleteAllPurchasesForOneCustomer(customerId);
     }
 
     public ArrayList<Customer> getAllCustomers() throws SQLException, SystemException {

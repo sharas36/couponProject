@@ -54,4 +54,14 @@ public class Company extends User{
 	public void setDeleted(){
 		this.deleted = !this.deleted;
 	}
+
+	@Override
+	public String toString() {
+		return "Company{" +
+				"companyId=" + companyId +
+				", companyName='" + companyName + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				'}';
+	}
 }

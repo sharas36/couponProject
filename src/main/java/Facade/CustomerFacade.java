@@ -10,6 +10,7 @@ import firstStep.SystemException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomerFacade extends MainFacade{
 
@@ -49,33 +50,34 @@ public class CustomerFacade extends MainFacade{
     }
 
     public List<Coupon> getCustomersCouponsOfCategory(int categoryId) throws SystemException, SQLException {
-        List<Coupon> couponsOfCustomer = new ArrayList<>();
-        couponsOfCustomer = getAllCustomersCoupons();
-        List<Coupon> couponOfCategory = new ArrayList<>();
-        for(Coupon coupon : couponsOfCustomer){
-            if(coupon.getCategoryId() == categoryId){
-                couponOfCategory.add(coupon);
-            }
-        }
-        if(couponOfCategory == null){
+        List<Coupon> couponsOfCustomer = getAllCustomersCoupons();
+//        List<Coupon> couponOfCategory = new ArrayList<>();
+//        for(Coupon coupon : couponsOfCustomer){
+//            if(coupon.getCategoryId() == categoryId){
+//                couponOfCategory.add(coupon);
+//            }
+//        }
+        couponsOfCustomer = couponsOfCustomer.stream().filter(coupon -> coupon.getCategoryId() == categoryId).collect(Collectors.toList());
+
+        if(couponsOfCustomer == null){
             throw new SystemException("This customer havent coupons in this category");
         }
-        return couponOfCategory;
+        return couponsOfCustomer;
     }
 
     public List<Coupon> getCustomersCouponsByMaxPrice(int maxPrice) throws SystemException, SQLException {
-        List<Coupon> couponsOfCustomer = new ArrayList<>();
-        couponsOfCustomer = getAllCustomersCoupons();
-        List<Coupon> couponsByMaxPrice = new ArrayList<>();
-        for(Coupon coupon : couponsOfCustomer){
-            if(coupon.getPrice() <= maxPrice){
-                couponsByMaxPrice.add(coupon);
-            }
-        }
-        if(couponsByMaxPrice == null){
+        List<Coupon> couponsOfCustomer = getAllCustomersCoupons();
+//        List<Coupon> couponsByMaxPrice = new ArrayList<>();
+////        for(Coupon coupon : couponsOfCustomer){
+////            if(coupon.getPrice() <= maxPrice){
+////                couponsByMaxPrice.add(coupon);
+////            }
+////        }
+        if(couponsOfCustomer == null){
             throw new SystemException("This customer havent coupons under this price");
         }
-        return couponsByMaxPrice;
+        couponsOfCustomer = couponsOfCustomer.stream().filter(coupon -> coupon.getPrice() <= maxPrice).collect(Collectors.toList());
+        return couponsOfCustomer;
     }
 
     public Customer getCustomerDetails() throws SQLException {

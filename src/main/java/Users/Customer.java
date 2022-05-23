@@ -29,4 +29,13 @@ public class Customer extends User {
     public void setDeleted() {
         this.deleted = !this.deleted;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }

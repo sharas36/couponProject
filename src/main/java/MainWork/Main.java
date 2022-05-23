@@ -242,5 +242,7 @@ public class Main {
 
 
     public static void companyMenu(CompanyFacade mainFacade) {
+        System.out.println();
     }
 }
+

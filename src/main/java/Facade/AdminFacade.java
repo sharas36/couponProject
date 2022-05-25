@@ -19,7 +19,6 @@ public class AdminFacade extends MainFacade {
     }
 
 
-
     @Override
     public Boolean login(String email, String password) throws SystemException {
         if (!(email.equals("admin@admin.com"))) {
@@ -58,7 +57,7 @@ public class AdminFacade extends MainFacade {
         ArrayList<Coupon> coupons = couponsDBDAO.getAllCouponsOfCompany(companyId);
         this.companiesDBDAO.deleteCompany(companyId);
         this.couponsDBDAO.deleteAllCouponsByCompany(companyId);
-        for (Coupon coupon: coupons) {
+        for (Coupon coupon : coupons) {
             this.couponsDBDAO.deleteAllPurchasesForOneCoupon(coupon.getCouponId());
         }
 
@@ -87,8 +86,10 @@ public class AdminFacade extends MainFacade {
     }
 
     public void updateCustomer(int customerId, String email, String password) throws SystemException, SQLException {
-        if (!this.customersDBDAO.isThisMailExist(customersDBDAO.getCustomer(customerId).getEmail())) {
+        if (this.customersDBDAO.getCustomer(customerId) == null) {
             throw new SystemException("This customer isnt exist");
+        } else if (customersDBDAO.getCustomerIdByMail(email) != 0 && customersDBDAO.getCustomerIdByMail(email) != customerId) {
+            throw new SystemException("This email is already exist");
         }
         this.customersDBDAO.updateCustomer(customerId, email, password);
     }

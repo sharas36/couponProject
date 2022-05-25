@@ -11,12 +11,10 @@ import Users.Admin;
 import Users.Company;
 import Users.Customer;
 import Users.User;
-import firstStep.Category;
-import firstStep.ClientType;
-import firstStep.Coupon;
-import firstStep.SystemException;
+import firstStep.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -27,31 +25,35 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, SystemException {
 
-        CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
-        CompaniesDBDAO companiesDBDAO = new CompaniesDBDAO();
-        CustomersDBDAO customersDBDAO = new CustomersDBDAO();
-        CompanyFacade companyFacade = new CompanyFacade(companiesDBDAO, couponsDBDAO, customersDBDAO);
-        System.out.println(couponsDBDAO.getAllCouponsByCustomer(7).size());
-  //     MainFacade mainFacade = userCheckScreen();
-//        User user = login(mainFacade);
-//        if (user instanceof Admin) {
-//            adminMenu((AdminFacade) mainFacade);
-//        } else if (user instanceof Company) {
-//            companyMenu((CompanyFacade) mainFacade);
-//        } else {
-//            customerMenu((CustomerFacade) mainFacade);
-//        }
 
-        Category category = Category.CAR;
-        System.out.println(category.toString() + category.getCategoryId());
+        Job dailyJob = new Job();
+        LoginManager loginManager = LoginManager.getInstance();
+// "admin@admin.com"
+// admin
+
+        System.out.println("please enter your email");
+        String email = scanner.nextLine();
+        System.out.println("please enter your password");
+        String password = scanner.nextLine();
+
+        MainFacade mainFacade = loginManager.login(userCheckScreen(), email, password);
+
+
+        if (mainFacade instanceof AdminFacade) {
+            adminMenu((AdminFacade) mainFacade);
+        } else if (mainFacade instanceof CompanyFacade) {
+            companyMenu((CompanyFacade) mainFacade);
+        } else {
+            customerMenu((CustomerFacade) mainFacade);
+        }
 
 
     }
 
-//fsdfdsfsd
     public static ClientType userCheckScreen() {
+        System.out.println("please enter your choice: ");
 
-        System.out.println("1. Amin \n" +
+        System.out.println("1. Admin \n" +
                 "2. Company \n" +
                 "3. customer");
 
@@ -90,7 +92,7 @@ public class Main {
             System.out.println("Do you want to choose again your type again? y/n");
             switch (scanner.next()) {
                 case "y":
-                   // mainFacade = userCheckScreen();
+                    // mainFacade = userCheckScreen();
                     break;
                 case "n":
                     break;
@@ -107,7 +109,7 @@ public class Main {
         return new Customer(email, password);
     }
 
-    public static void adminMenu(AdminFacade adminFacade) throws SQLException {
+    public static void adminMenu(AdminFacade adminFacade) throws SQLException, SystemException, InterruptedException {
 
 
         while (true) {
@@ -152,30 +154,129 @@ public class Main {
                     }
                     break;
                 case 4:
-
+                    try {
+                        printAllCompany(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 5:
-
+                    try {
+                        getOneCompany(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 6:
-
+                    try {
+                        addCustomer(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 7:
-
+                    try {
+                        updateCustomerAdmin(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 8:
-
+                    try {
+                        deleteCustomerAdmin(adminFacade);
+                    } catch (SystemException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 9:
-
+                    try {
+                        getAllCustomerAdmin(adminFacade);
+                    } catch (SystemException e) {
+                        e.toString();
+                    }
                     break;
                 case 10:
-
+                    getOneCustomer(adminFacade);
                     break;
                 default:
                     System.out.println("You need to insert number 1-10. please try again");
-
+                    Thread.sleep(1000);
             }
+        }
+
+    }
+
+    private static void getOneCustomer(AdminFacade adminFacade) throws SystemException, SQLException {
+        adminFacade.getAllCustomers();
+        System.out.println("please enter customer id");
+        int customerId = scanner.nextInt();
+        System.out.println(adminFacade.getOneCustomer(customerId).toString());
+    }
+
+    private static void getAllCustomerAdmin(AdminFacade adminFacade) throws SystemException, SQLException {
+        for (Customer customer : adminFacade.getAllCustomers()) {
+            System.out.println(customer);
+        }
+
+    }
+
+    private static void deleteCustomerAdmin(AdminFacade adminFacade) throws SystemException, SQLException {
+
+        adminFacade.getAllCustomers();
+        System.out.println("please enter customer id");
+        int customerId = scanner.nextInt();
+        adminFacade.deleteCustomer(customerId);
+    }
+
+    private static void updateCustomerAdmin(AdminFacade adminFacade) throws SystemException, SQLException {
+
+        adminFacade.getAllCustomers();
+        System.out.println("please enter customer id");
+        int customerId = scanner.nextInt();
+        System.out.println("please enter customer email");
+        String email = scanner.next();
+        System.out.println("please enter customer rpassword");
+        String password = scanner.next();
+
+        adminFacade.updateCustomer(customerId, email, password);
+
+    }
+
+    private static void addCustomer(AdminFacade adminFacade) throws SystemException, SQLException {
+
+        System.out.println("please enter your first name");
+        String firstName = scanner.next();
+
+        System.out.println("please enter your last name");
+        String lastName = scanner.next();
+
+        System.out.println("please enter your email");
+        String email = scanner.next();
+
+        System.out.println("please enter your password");
+        String password = scanner.next();
+        Customer customer = new Customer(firstName, lastName, email, password);
+
+        adminFacade.addCustomer(customer);
+
+    }
+
+
+    private static void getOneCompany(AdminFacade adminFacade) throws SystemException, SQLException {
+
+        System.out.println("please enter your email and password");
+
+        printAllCompany(adminFacade);
+        System.out.println("please insert company id");
+        int id = scanner.nextInt();
+
+        Company company = adminFacade.getOneCompany(id);
+        System.out.println(company);
+    }
+
+    private static void printAllCompany(AdminFacade adminFacade) throws SystemException, SQLException {
+        for (Company company : adminFacade.getAllCompanies()) {
+            System.out.println(company);
         }
     }
 

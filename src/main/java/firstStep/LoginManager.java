@@ -18,7 +18,7 @@ public class LoginManager {
     }
 
 
-    public LoginManager getInstance() {
+    public static LoginManager getInstance() {
         return instance;
     }
 

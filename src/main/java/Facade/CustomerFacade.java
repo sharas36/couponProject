@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CustomerFacade extends MainFacade{
+public class CustomerFacade extends MainFacade {
 
     private int customerId;
 
@@ -22,29 +22,30 @@ public class CustomerFacade extends MainFacade{
 
     @Override
     public Boolean login(String email, String password) throws SQLException, SystemException {
-        if(customersDBDAO.isCustomerExist(email, password)){
+        if (customersDBDAO.isCustomerExist(email, password)) {
             this.customerId = customersDBDAO.getCustomerIdByMail(email);
             return true;
         }
-        if(!customersDBDAO.isThisMailExist(email)){
+
+        if (!customersDBDAO.isThisMailExist(email)) {
             throw new SystemException("This mail isnt exist");
-        }
-        else
+        } else
             throw new SystemException("The password isnt match the mail");
     }
 
     public void purchaseCoupon(int couponId) throws SQLException, SystemException {
-        if(couponsDBDAO.getOneCoupon(couponId).getAmount() == 0 || couponsDBDAO.getOneCoupon(couponId) == null){
+
+        if (couponsDBDAO.getOneCoupon(couponId).getAmount() == 0 || couponsDBDAO.getOneCoupon(couponId) == null) {
             throw new SystemException("This coupon is not available");
         }
-        if(!couponsDBDAO.addCouponPurchase(couponId, this.customerId)){
+        if (!couponsDBDAO.addCouponPurchase(couponId, this.customerId)) {
             throw new SystemException("You already purchase this coupon");
         }
     }
 
     public List<Coupon> getAllCustomersCoupons() throws SystemException, SQLException {
-        if(couponsDBDAO.getAllCouponsByCustomer(this.customerId) == null){
-            throw new SystemException("This customer havent coupons");
+        if (couponsDBDAO.getAllCouponsByCustomer(this.customerId).size()<1) {
+            throw new SystemException("This customer haven't coupons");
         }
         return couponsDBDAO.getAllCouponsByCustomer(this.customerId);
     }
@@ -59,8 +60,8 @@ public class CustomerFacade extends MainFacade{
 //        }
         couponsOfCustomer = couponsOfCustomer.stream().filter(coupon -> coupon.getCategoryId() == categoryId).collect(Collectors.toList());
 
-        if(couponsOfCustomer == null){
-            throw new SystemException("This customer havent coupons in this category");
+        if (couponsOfCustomer == null) {
+            throw new SystemException("This customer  haven't coupons in this category");
         }
         return couponsOfCustomer;
     }
@@ -73,7 +74,7 @@ public class CustomerFacade extends MainFacade{
 ////                couponsByMaxPrice.add(coupon);
 ////            }
 ////        }
-        if(couponsOfCustomer == null){
+        if (couponsOfCustomer == null) {
             throw new SystemException("This customer havent coupons under this price");
         }
         couponsOfCustomer = couponsOfCustomer.stream().filter(coupon -> coupon.getPrice() <= maxPrice).collect(Collectors.toList());
@@ -84,7 +85,7 @@ public class CustomerFacade extends MainFacade{
         return customersDBDAO.getCustomer(this.customerId);
     }
 
-    public void setCustomerId(int customerId){
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 }

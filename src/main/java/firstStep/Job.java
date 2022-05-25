@@ -12,11 +12,12 @@ import java.util.List;
 public class Job extends Thread {
 
     private CouponsDBDAO couponsDBDAO = new CouponsDBDAO();
+    boolean quite = true;
 
     @Override
     public void run() {
 
-        while (true) {
+        while (quite) {
 
             try {
                 couponsDBDAO.filterExpiredCoupon();
@@ -26,10 +27,15 @@ public class Job extends Thread {
             }
 
 
-
         }
 
     }
+
+    public void quiteProgram() {
+        this.quite = false;
+    }
+
+
 }
 
 

@@ -101,7 +101,7 @@ public class CouponsDBDAO implements CouponsDAO {
             preparedStatement.execute();
         }
         connectionPool.restoreConnection(connection);
-
+        deleteAllPurchasesForOneCoupon(couponId);
     }
 
     @Override
@@ -310,7 +310,7 @@ public class CouponsDBDAO implements CouponsDAO {
         }
         connectionPool.restoreConnection(connection);
         while (resultSet.next()) {
-            if(getOneCoupon(resultSet.getInt("couponId")).getCategoryId() == categoryId) {
+            if (getOneCoupon(resultSet.getInt("couponId")).getCategoryId() == categoryId) {
                 coupons.add(getOneCoupon(resultSet.getInt("couponId")));
             }
         }
@@ -509,7 +509,7 @@ public class CouponsDBDAO implements CouponsDAO {
     public boolean isThisCouponExistForThisCompany(String couponName, int companyId) throws SQLException {
         Connection connection = connectionPool.getConnection();
 
-        String sql = "select * from coupons where couponName = " + couponName + " and companyId = " + companyId  + "";
+        String sql = "select * from coupons where couponName = " + couponName + " and companyId = " + companyId + "";
         synchronized (lock) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultset = preparedStatement.executeQuery();

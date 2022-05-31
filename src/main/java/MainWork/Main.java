@@ -23,7 +23,7 @@ public class Main {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws SQLException, SystemException {
+    public static void main(String[] args) throws SQLException, SystemException, InterruptedException {
 
 
         Job dailyJob = new Job();
@@ -47,7 +47,7 @@ public class Main {
             customerMenu((CustomerFacade) mainFacade);
         }
 
-
+        dailyJob.quitProgram();
     }
 
     public static ClientType userCheckScreen() {

@@ -55,7 +55,7 @@ public class ConnectionPool {
         if (connectionPool.size() <= 0) {
             try {
                 wait();
-                // getConnection(); only in case if notify all is needed
+                // getConnection(); only in case if notify all is needed!
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -45,7 +45,7 @@ public class Main {
             customerMenu((CustomerFacade) mainFacade);
         }
 
-
+        dailyJob.quitProgram();
     }
 
     public static ClientType userCheckScreen() {

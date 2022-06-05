@@ -23,13 +23,11 @@ public class Main {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) throws SQLException, SystemException {
+    public static void main(String[] args) throws SQLException, SystemException, InterruptedException {
 
 
         Job dailyJob = new Job();
         LoginManager loginManager = LoginManager.getInstance();
-// "admin@admin.com"
-// admin
 
         System.out.println("please enter your email");
         String email = scanner.nextLine();

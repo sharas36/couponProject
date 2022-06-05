@@ -51,23 +51,24 @@ public class ConnectionPool {
     }
 
     public synchronized Connection getConnection() {
-        while(true){
-            if(connectionPool.size() > 0){
-                return connectionPool.pop();
+
+        if (connectionPool.size() <= 0) {
+            try {
+                wait();
+                // getConnection(); only in case if notify all is needed
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            else {
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+
         }
+
+        return connectionPool.pop();
     }
 
     public synchronized boolean restoreConnection(Connection connection) {
-
-        return connectionPool.add(connection);
+        boolean isAdded = connectionPool.add(connection);
+        notify();
+        return isAdded;
 
     }
 
@@ -76,7 +77,8 @@ public class ConnectionPool {
             connection.close();
         }
     }
-    public int getConnectionPoolSize(){
+
+    public int getConnectionPoolSize() {
         return connectionPool.size();
     }
 }

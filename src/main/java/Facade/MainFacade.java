@@ -1,5 +1,6 @@
 package Facade;
 
+import DAO.DAOCompanies.CompaniesDAO;
 import DAO.DAOCompanies.CompaniesDBDAO;
 import DAO.DAOCoupons.CouponsDBDAO;
 import DAO.DAOCustomers.CustomersDBDAO;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 @Data
 public abstract class MainFacade {
 
-    protected CompaniesDBDAO companiesDBDAO;
+    protected CompaniesDAO companiesDBDAO;
     protected CouponsDBDAO couponsDBDAO;
     protected CustomersDBDAO customersDBDAO;
 
